@@ -1,0 +1,20 @@
+/*=========================================
+#
+# Author: Tao Wu - taowu@umiacs.umd.edu
+#
+# Last-modified: 17 Feb 2012 10:45:12 AM
+#
+# Filename: person.cc
+#
+=========================================*/
+
+#include "dataset/person.h"
+#include <string>
+
+namespace SocialNetwork {
+
+Person::Person(const std::string &id)
+  : id_(id) {
+}
+
+}

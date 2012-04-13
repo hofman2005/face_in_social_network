@@ -1,0 +1,20 @@
+/*=========================================
+#
+# Author: Tao Wu - taowu@umiacs.umd.edu
+#
+# Last-modified: 07 Mar 2012 02:01:04 PM
+#
+# Filename: album_generator.cc
+#
+=========================================*/
+
+#include "random_generator/random_generators.h"
+
+namespace SocialNetwork {
+
+void RandomGenerators::AlbumGenerator(const SocialGraph &graph,
+                                      const AlbumMap &image_map,
+                                      AlbumMap *album_map) {
+};
+
+}

@@ -1,0 +1,31 @@
+/*=========================================
+#
+# Author: Tao Wu - taowu@umiacs.umd.edu
+#
+# Last-modified: 17 Feb 2012 10:47:14 AM
+#
+# Filename: album_generator.h
+#
+=========================================*/
+
+#ifndef RANDOM_GENERATOR_ALBUM_GENERATOR_H_
+#define RANDOM_GENERATOR_ALBUM_GENERATOR_H_
+
+#include "dataset/social_graph.h"
+
+// TODO
+// Something need to consider:
+//   The percentage of images of one person appear in his album
+//   The level of connected people appear in one's album
+//   The percentage of connected people appear in one's album
+//   Any overlap between connected friends' albums?
+
+namespace RandomGenerators {
+
+void RandomAlbumGenerator(SocialNetwork::Vertex *graph);
+
+}
+
+#endif  // RANDOM_GENERATOR_ALBUM_GENERATOR_H_
+
+

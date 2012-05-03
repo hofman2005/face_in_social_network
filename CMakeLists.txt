@@ -1,7 +1,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 10 Mar 2012 08:57:30 AM
+# Last-modified: 01 May 2012 04:34:54 PM
 #
 # Filename: CMakeLists.txt
 #
@@ -50,3 +50,9 @@ TARGET_LINK_LIBRARIES(contagion ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 ADD_EXECUTABLE(analysis analysis.cc ${SRC_LIST})
 TARGET_LINK_LIBRARIES(analysis ${OpenCV_LIBS} ${Boost_LIBRARIES})
+
+ADD_EXECUTABLE(final_readout final_readout.cc ${SRC_LIST})
+TARGET_LINK_LIBRARIES(final_readout ${OpenCV_LIBS} ${Boost_LIBRARIES})
+
+ADD_EXECUTABLE(baseline baseline.cc ${SRC_LIST})
+TARGET_LINK_LIBRARIES(baseline ${OpenCV_LIBS} ${Boost_LIBRARIES})

@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 12 Apr 2012 03:34:46 PM
+# Last-modified: 16 Apr 2012 02:10:02 AM
 #
 # Filename: social_graph.h
 #
@@ -83,13 +83,23 @@ class BfsFaceRecognitionVisitor : public boost::default_bfs_visitor {
 
 void ReadGraphFromFile(const std::string &input_file, 
                        SocialGraph *graph);
+void ReadGraphFromFile(const char* input_file, 
+                       SocialGraph *graph);
 void WriteGraphToFile(const SocialGraph &graph, 
                       std::string output_file);
+void WriteGraphToFile(const SocialGraph &graph, 
+                      const char* output_file);
+
 
 void ReadAlbumMapFromFile(const std::string &input_file,
                           AlbumMap *album);
+void ReadAlbumMapFromFile(const char* input_file,
+                          AlbumMap *album);
 void WriteAlbumMapToFile(const AlbumMap &album,
                          std::string output_file);
+void WriteAlbumMapToFile(const AlbumMap &album,
+                         const char* output_file);
+
 
 const int AnalysisImageList(const std::string &filename,
                             AlbumMap *image_map); 

@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 08 Mar 2012 09:50:47 AM
+# Last-modified: 01 May 2012 02:21:58 AM
 #
 # Filename: social_graph.cc
 #
@@ -51,11 +51,16 @@ void PropertyWriter::operator() (std::ostream& out,
 
 void WriteGraphToFile(const SocialGraph &graph, 
                       std::string output_file) {
+  WriteGraphToFile(graph, output_file.c_str());
+}
+
+void WriteGraphToFile(const SocialGraph &graph, 
+                      const char* output_file) {
   PropertyWriter pw(graph);
   boost::default_writer vw;
   boost::default_writer gw;
   
-  std::ofstream out(output_file.c_str());
+  std::ofstream out(output_file);
   boost::write_graphviz(out, graph, pw, vw, gw, 
                         get(&PersonProperty::person_id, graph));
   out.close();
@@ -79,14 +84,22 @@ void ReadAlbumMapFromFile(const std::string &input_file,
   std::ifstream in(input_file.c_str());
   std::string content, file, assigned_id, assigned_by;
   std::string current_id;
+  char first;
   while (true) {
-    in >> content;
+    // in >> content;
+    in.get(first);
     if (!in.good()) break;
-    if (content[0]=='#') {
-      current_id = content.substr(1, content.size()-1);
+    if (first == '\n') in.get(first); // Skip the \n at the end of each line.
+    //if (content[0]=='#') {
+    if (first == '#') {
+      //current_id = content.substr(1, content.size()-1);
+      in >> current_id;
     } else {
-      in >> file >> assigned_id >> assigned_by;
-      Photo *photo = new Photo(content, file, assigned_id, assigned_by);
+      //in >> file >> assigned_id >> assigned_by;
+      //Photo *photo = new Photo(content, file, assigned_id, assigned_by);
+      in.putback(first);
+      Photo *photo = new Photo;
+      photo->ReadFromStream(in);
       (*album)[current_id].push_back(*photo);
     }
   }
@@ -94,7 +107,12 @@ void ReadAlbumMapFromFile(const std::string &input_file,
 
 void WriteAlbumMapToFile(const AlbumMap &album,
                          std::string output_file) {
-  std::ofstream out(output_file.c_str());
+  WriteAlbumMapToFile(album, output_file.c_str());
+}
+
+void WriteAlbumMapToFile(const AlbumMap &album,
+                         const char* output_file) {
+  std::ofstream out(output_file);
   for (AlbumMap::const_iterator album_iter = album.begin();
       album_iter != album.end();
       ++album_iter) {
@@ -103,10 +121,11 @@ void WriteAlbumMapToFile(const AlbumMap &album,
     for (Album::const_iterator photo_iter = album.begin();
          photo_iter != album.end();
          ++photo_iter) {
-      out << photo_iter->GetTrueId() << " "
-          << photo_iter->GetFilename() << " "
-          << photo_iter->GetAssignedId() << " "
-          << photo_iter->GetAssignedBy() << std::endl;
+//       out << photo_iter->GetTrueId() << " "
+//           << photo_iter->GetFilename() << " "
+//           << photo_iter->GetAssignedId() << " "
+//           << photo_iter->GetAssignedBy() << std::endl;
+         photo_iter->WriteToStream(out);
     }
   }
   out.close();

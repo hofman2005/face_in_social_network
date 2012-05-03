@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 10 Mar 2012 09:13:00 AM
+# Last-modified: 27 Apr 2012 01:11:26 PM
 #
 # Filename: analysis.cc
 #
@@ -53,9 +53,14 @@ int main(int argc, char **argv) {
   std::cout << "Loading album file: " << album_filename << std::endl;
   sn::ReadAlbumMapFromFile(album_filename, &album_map);
 
+  // Test
+  // sn::WriteAlbumMapToFile(album_map, "/tmp/test.alb");
+
   // Convert the recognition accuracy to color
   sn::VertexIterator ver_it, ver_it_end;
   tie(ver_it, ver_it_end) = vertices(graph);
+
+  sn::SocialGraph false_alarm_graph = graph;
   
   for (; ver_it != ver_it_end; ++ver_it) {
     std::string &id = graph[*ver_it].person_id;
@@ -63,6 +68,7 @@ int main(int argc, char **argv) {
     // Compute the accuracy for a node
     int count = 0;
     int correct_count = 0;
+    int wrong_count = 0;
     for (sn::Album::const_iterator it=album.begin();
          it!=album.end();
          ++it) {
@@ -71,16 +77,24 @@ int main(int argc, char **argv) {
         if (it->GetAssignedId() == it->GetTrueId()) {
           ++correct_count;
         }
+        if (it->GetAssignedId() != "-" && it->GetAssignedId() != it->GetTrueId()) {
+          ++wrong_count;
+        }
       }
     }
     int color = 0;
     if (count==0) {
       int a=0;
       graph[*ver_it].SetColor(0, 0, 0);
+      false_alarm_graph[*ver_it].SetColor(0,0,0);
     }
     if (count!=0) {
       color = correct_count * 255 / count;
-      graph[*ver_it].SetColor(color, 128, 0);
+      graph[*ver_it].SetColor(0, color, 0);
+      color = wrong_count * 255 / count;
+      false_alarm_graph[*ver_it].SetColor(color, 0, 0);
+      std::cout << "Accuracy " << correct_count << " of " << count 
+        << " False alarm " << wrong_count << std::endl;
     }
   }
 
@@ -88,6 +102,8 @@ int main(int argc, char **argv) {
   // Save graph
   std::string output_dot_file = output_prefix + ".dot";
   sn::WriteGraphToFile(graph, output_dot_file);
+  output_dot_file = output_prefix + "false_alarm.dot";
+  sn::WriteGraphToFile(false_alarm_graph, output_dot_file);
   // Save the album
   // std::string output_album_file = output_prefix + ".alb";
   // sn::WriteAlbumMapToFile(album_map, output_album_file);

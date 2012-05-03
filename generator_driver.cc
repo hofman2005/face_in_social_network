@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 09 Mar 2012 11:12:55 AM
+# Last-modified: 16 Apr 2012 08:43:10 AM
 #
 # Filename: generator_driver.cc
 #
@@ -40,6 +40,9 @@ int main(int argc, char **argv) {
   // Parse options
   std::string input_file;
   std::string output_prefix;
+  int max_num_nodes;
+  int factor = 10000;
+  int dist_thres = 4e5;
 
   po::options_description options("command line options");
   options.add_options() 
@@ -48,6 +51,12 @@ int main(int argc, char **argv) {
      "Image list file.")
     ("out-prefix,o", boost::program_options::value<std::string>(&output_prefix), 
      "Output file prefix. Extension .dot and .alb will be appended.")
+    ("max-nodes", boost::program_options::value<int>(&max_num_nodes)->default_value(0),
+     "The maximum number of nodes in the graph.")
+    ("factor", boost::program_options::value<int>(&factor)->default_value(10000),
+     "The factor parameter will multiplied with a random number in [0,1].")
+    ("dist-thres", boost::program_options::value<int>(&dist_thres)->default_value(4e5),
+     "The threshold of the distance between a pair of friends.")
   ;
 
   po::variables_map vmap;
@@ -80,6 +89,18 @@ int main(int argc, char **argv) {
 
   std::cout << "Number of subject: " << image_map.size() << std::endl;
 
+  if (max_num_nodes > 0) {
+    std::cout << "Maximum number of nodes is set to: " << max_num_nodes << std::endl;
+    int count = 0;
+    sn::AlbumMap::iterator it;
+    for (it = image_map.begin();
+         it != image_map.end() && count <max_num_nodes;
+         ++it, ++count) {}
+    image_map.erase(it, image_map.end());
+  }
+
+  std::cout << "Factor: " << factor << std::endl << "dist_thres: " << dist_thres << std::endl;
+
   // Generate graph
   //namespace rg = SocialNetwork::RandomGenerators;
   const int num_vertex = image_map.size();
@@ -87,8 +108,6 @@ int main(int argc, char **argv) {
   
   //rg::RandomEdgeGenerator(&graph);
   sn::RandomGenerators generator;
-  const int factor = 10000;
-  const int dist_thres = 4e5;
   generator.EdgeGenerator(factor, dist_thres, &graph);
 
   // Assign person_ID

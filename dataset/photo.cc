@@ -44,25 +44,26 @@ cv::Mat Photo::GetImage(const std::string &prefix) {
 
 int Photo::ReadFromStream(std::ifstream& in) {
   in >> true_id_ >> image_file_ >> assigned_id_ >> assigned_by_;
-  // Check if there is record for scores
-  char first;
-  in.get(first);
-  if (first == '\n') {
-    return 0;
-  } else {
-    in.putback(first);
-  }
-  std::stringbuf buf;
-  in.get(buf, '\n');
-  std::stringstream ss(buf.str());
-  std::string id;
-  double dist;
-  res_.clear();
-  ss >> id >> dist;
-  while (ss.good()) {
-    res_[id] = dist;
-    ss >> id >> dist;
-  }
+  // // Check if there is record for scores
+  // char first;
+  // in.get(first);
+  // if (first == '\n') {
+  //   return 0;
+  // } else {
+  //   in.putback(first);
+  // }
+  // std::stringbuf buf;
+  // in.get(buf, '\n');
+  // std::stringstream ss(buf.str());
+  // std::string id;
+  // double dist;
+  // res_.clear();
+  // ss >> id >> dist;
+  // while (ss.good()) {
+  //   res_[id] = dist;
+  //   ss >> id >> dist;
+  // }
+  in >> res_;
   return 0;
 }
 
@@ -71,22 +72,25 @@ int Photo::WriteToStream(std::ofstream& out) const {
       << image_file_ << " "
       << assigned_id_ << " "
       << assigned_by_ << " ";
-  PhotoRes::const_iterator it;
-  for (it=res_.begin(); it!=res_.end(); ++it) {
-    out << it->first << " " << it->second << " ";
-  }
-  out << std::endl;
+  // PhotoRes::const_iterator it;
+  // for (it=res_.begin(); it!=res_.end(); ++it) {
+  //   out << it->first << " " << it->second << " ";
+  // }
+  // out << std::endl;
+
+  out << res_;
   return 0;
 }
 
-std::string Photo::DecideId() {
-  if (assigned_by_ == "God") return assigned_id_;
-  std::vector< std::pair<std::string, double> > vec(res_.begin(), res_.end());
-  std::sort(vec.begin(), vec.end(), IntCmp());
-  std::string final_id = "";
-  if (vec.size() >= 1) final_id = vec[0].first;
-  assigned_id_ = final_id;
-  assigned_by_ = "Final";
-  return final_id;
+const std::string& Photo::DecideId() {
+  // if (assigned_by_ == "God") return assigned_id_;
+  // std::vector< std::pair<std::string, double> > vec(res_.begin(), res_.end());
+  // std::sort(vec.begin(), vec.end(), IntCmp());
+  // std::string final_id = "";
+  // if (vec.size() >= 1) final_id = vec[0].first;
+  // assigned_id_ = final_id;
+  // assigned_by_ = "Final";
+  // return final_id;
+  return res_.GetSortedDecision(0);
 }
 }

@@ -129,4 +129,38 @@ bool PCAClassifier::Identify(cv::Mat& image, std::map<std::string, double>* res)
   // }
   return true;
 }
+
+bool PCAClassifier::Identify(cv::Mat& image, PhotoResult* res) {
+  cv::Size size = image.size();
+  cv::Mat temp = image.reshape(1, 1);
+  cv::Mat test_data(1, size.width * size.height, CV_32FC1);
+  //cv::Mat row = test_data.row(0);
+  temp.convertTo(test_data, CV_32FC1);
+  //test_data.row(0) = image.reshape(size.width*size.height);
+  //image.convertTo(test_data.row(0), CV_64FC1, 1, 0);
+  //image.convertTo(temp, CV_64FC1, 1, 0);
+
+  //cv::Mat feature = pca_.project(test_data);
+  cv::Mat feature = test_data;
+
+  std::map<int, double> raw_res; 
+  //kernel_.Identify(feature, &raw_res);
+  kernel2_.predict(feature, &raw_res);
+
+  std::map<int, double>::iterator it;
+  for (it=raw_res.begin(); it!=raw_res.end(); ++it) {
+    //(*res)[id_table_reverse_[static_cast<int>(it->first)]] = it->second;
+    const std::string& id = id_table_reverse_[static_cast<int>(it->first)];
+    double& score = it->second;
+    res->AddRecord(id, score);
+  }
+
+  // FOR DEBUG
+  // std::map<std::string, double>::iterator it2;
+  // std::cout << "Result:" << std::endl;
+  // for (it2=res->begin(); it2!=res->end(); ++it2) {
+  //   std::cout << it2->first << " " << it2->second << std::endl;
+  // }
+  return true;
+}
 }

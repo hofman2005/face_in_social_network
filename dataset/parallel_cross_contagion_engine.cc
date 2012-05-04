@@ -121,7 +121,7 @@ int ParallelCrossContagionEngine<Classifier>::PropagateOnSingleVertex
   if ((*graph_)[current].person_id == "Infection_Source") return 0;
   std::cout << "Propagate to " << (*graph_)[current].person_id << std::endl;
 
-  FaceRecognition::BaseClassifier* classifier = classifiers_[base]; 
+  FaceRecognition::BaseClassifier* pclassifier = classifiers_[base]; 
 
   // const std::string &image_prefix = BaseBehavior<Classifier>::image_prefix_;
   const std::string &image_prefix = image_prefix_;
@@ -154,32 +154,32 @@ int ParallelCrossContagionEngine<Classifier>::PropagateOnSingleVertex
     // };
 
     // Multi candidate identification
-    std::map<std::string, double>& res = it->GetRes();
-    std::map<std::string, double> new_res;
-    classifier->Identify(image, &new_res);
+    // std::map<std::string, double>& res = it->GetRes();
+    // std::map<std::string, double> new_res;
+    // pclassifier->Identify(image, &new_res);
+    FaceRecognition::PhotoResult& res = (*it).GetPhotoRes();
+    pclassifier->Identify(image, &res); 
 
-    // Merge result
-    for (std::map<std::string, double>::iterator res_it = new_res.begin();
-         res_it != new_res.end();
-         ++res_it) {
-      if (res.find(res_it->first)!=res.end()) {
-        if (res_it->second < res[res_it->first]) {
-          res[res_it->first] = res_it->second;
-        }
-      } else {
-        res[res_it->first] = res_it->second;
-      }
-    }
-
-    std::vector< std::pair<std::string, double> > vec(res.begin(), res.end());
-    std::sort(vec.begin(), vec.end(), IntCmp());
-    std::string res_id;
+    // std::vector< std::pair<std::string, double> > vec(res.begin(), res.end());
+    // std::sort(vec.begin(), vec.end(), IntCmp());
+    // Make a decision.
+    std::string res_id = "-";
     const double threshold = 3.0f;
-    if (vec[1].second / vec[0].second > threshold) {
-      res_id = vec[0].first;
-      (*it).SetAssignedId(res_id, (*graph_)[current].person_id); 
-    } else {
-      res_id = "-";
+    // if (vec[1].second / vec[0].second > threshold) {
+    //   res_id = vec[0].first;
+    //   (*it).SetAssignedId(res_id, (*graph_)[current].person_id); 
+    // } else {
+    //   res_id = "-";
+    // }
+    if (res.GetNumRecord() > 1) {
+      std::string id_0, id_1;
+      double score_0, score_1;
+      res.GetSortedDecision(0, &score_0, &id_0);
+      res.GetSortedDecision(1, &score_1, &id_1);
+      if (score_1 / score_0 > threshold) {
+        res_id = id_0;
+        (*it).SetAssignedId(res_id, (*graph_)[current].person_id);
+      }
     }
 
     // Simple analysis

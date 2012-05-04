@@ -3,7 +3,7 @@
 
 namespace FaceRecognition {
 using namespace cv;
-BayesClassifier::BayesClassifier()
+InnerBayesClassifier::InnerBayesClassifier()
 {
     var_count = var_all = 0;
     var_idx = 0;
@@ -19,7 +19,7 @@ BayesClassifier::BayesClassifier()
 }
 
 
-void BayesClassifier::clear()
+void InnerBayesClassifier::clear()
 {
     if( cls_labels )
     {
@@ -41,13 +41,13 @@ void BayesClassifier::clear()
 }
 
 
-BayesClassifier::~BayesClassifier()
+InnerBayesClassifier::~InnerBayesClassifier()
 {
     clear();
 }
 
 
-BayesClassifier::BayesClassifier(
+InnerBayesClassifier::InnerBayesClassifier(
     const CvMat* _train_data, const CvMat* _responses,
     const CvMat* _var_idx, const CvMat* _sample_idx )
 {
@@ -67,7 +67,7 @@ BayesClassifier::BayesClassifier(
 }
 
 
-bool BayesClassifier::train( const CvMat* _train_data, const CvMat* _responses,
+bool InnerBayesClassifier::train( const CvMat* _train_data, const CvMat* _responses,
                             const CvMat* _var_idx, const CvMat* _sample_idx, bool update )
 {
     const float min_variation = FLT_EPSILON;
@@ -78,7 +78,7 @@ bool BayesClassifier::train( const CvMat* _train_data, const CvMat* _responses,
     CvMat* __var_idx = 0;
     CvMat* cov = 0;
 
-    CV_FUNCNAME( "BayesClassifier::train" );
+    CV_FUNCNAME( "InnerBayesClassifier::train" );
 
     __BEGIN__;
 
@@ -361,7 +361,7 @@ struct predict_body {
 };
 
 
-float BayesClassifier::predict( const CvMat* samples, CvMat* results ) const
+float InnerBayesClassifier::predict( const CvMat* samples, CvMat* results ) const
 {
     float value = 0;
 
@@ -392,7 +392,7 @@ float BayesClassifier::predict( const CvMat* samples, CvMat* results ) const
     return value;
 }
 
-int BayesClassifier::predict(const CvMat* samples, std::map<int, double>* res) const {
+int InnerBayesClassifier::predict(const CvMat* samples, std::map<int, double>* res) const {
   float value = 0;
   const int* vidx = var_idx ? var_idx->data.i : 0;
   CvMat results;
@@ -406,9 +406,9 @@ int BayesClassifier::predict(const CvMat* samples, std::map<int, double>* res) c
 }
 
 
-void BayesClassifier::write( CvFileStorage* fs, const char* name ) const
+void InnerBayesClassifier::write( CvFileStorage* fs, const char* name ) const
 {
-    CV_FUNCNAME( "BayesClassifier::write" );
+    CV_FUNCNAME( "InnerBayesClassifier::write" );
 
     __BEGIN__;
 
@@ -463,10 +463,10 @@ void BayesClassifier::write( CvFileStorage* fs, const char* name ) const
 }
 
 
-void BayesClassifier::read( CvFileStorage* fs, CvFileNode* root_node )
+void InnerBayesClassifier::read( CvFileStorage* fs, CvFileNode* root_node )
 {
     bool ok = false;
-    CV_FUNCNAME( "BayesClassifier::read" );
+    CV_FUNCNAME( "InnerBayesClassifier::read" );
 
     __BEGIN__;
 
@@ -579,8 +579,10 @@ void BayesClassifier::read( CvFileStorage* fs, CvFileNode* root_node )
 
 using namespace cv;
 
-BayesClassifier::BayesClassifier( const Mat& _train_data, const Mat& _responses,
-                                    const Mat& _var_idx, const Mat& _sample_idx )
+InnerBayesClassifier::InnerBayesClassifier( const Mat& _train_data,
+                                            const Mat& _responses,
+                                            const Mat& _var_idx,
+                                            const Mat& _sample_idx )
 {
     var_count = var_all = 0;
     var_idx = 0;
@@ -599,7 +601,7 @@ BayesClassifier::BayesClassifier( const Mat& _train_data, const Mat& _responses,
                  sidx.data.ptr ? &sidx : 0);
 }
 
-bool BayesClassifier::train( const Mat& _train_data, const Mat& _responses,
+bool InnerBayesClassifier::train( const Mat& _train_data, const Mat& _responses,
                                     const Mat& _var_idx, const Mat& _sample_idx, bool update )
 {
     CvMat tdata = _train_data, responses = _responses, vidx = _var_idx, sidx = _sample_idx;
@@ -607,7 +609,7 @@ bool BayesClassifier::train( const Mat& _train_data, const Mat& _responses,
                  sidx.data.ptr ? &sidx : 0, update);
 }
 
-float BayesClassifier::predict( const Mat& _samples, Mat* _results ) const
+float InnerBayesClassifier::predict( const Mat& _samples, Mat* _results ) const
 {
     CvMat samples = _samples, results, *presults = 0;
     
@@ -623,7 +625,7 @@ float BayesClassifier::predict( const Mat& _samples, Mat* _results ) const
     return predict(&samples, presults);
 }
 
-int BayesClassifier::predict(const cv::Mat& samples, std::map<int, double>* res) const
+int InnerBayesClassifier::predict(const cv::Mat& samples, std::map<int, double>* res) const
 {
   CvMat samples_ = samples;
   predict(&samples_, res);

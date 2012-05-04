@@ -19,8 +19,10 @@
 
 #include <iostream>
 
+#include "classifier/photo_result.h"
+
 namespace FaceRecognition {
-typedef std::vector< std::pair<cv::Mat*, // Images
+typedef std::vector< std::pair<cv::Mat*,    // Images
                                std::string> // Image ID
                    > ImageList;
 
@@ -30,15 +32,24 @@ class BaseClassifier {
   virtual ~BaseClassifier() {};
 
   virtual int SetParameters() {return 0;};
+
   virtual int Train(const ImageList& image_list) 
     {std::cout << "Dummy Training." << std::endl;return 0;};
+
   virtual int TrainWithUpdatedLabels(const ImageList& image_list) 
     {std::cout << "Dummy Training with updated labels." << std::endl; return 0;};
+
   virtual bool IsTrained() {return false;};
+
   virtual bool Identify(cv::Mat& image, std::string *id) 
     {std::cout << "Dummy Identifying. " << std::endl; return false;};
+
   virtual bool Identify(cv::Mat& image, std::map<std::string, double>* res)
     {std::cout << "Dummy Identify ver2." << std::endl; return false;};
+
+  virtual bool Identify(cv::Mat& image, PhotoResult* res)
+    {std::cout << "Dummy Identify ver3." << std::endl; return false;};
+
   virtual bool Verify() {return false;};
 
   virtual int Load(std::string &file_name) {return 0;};

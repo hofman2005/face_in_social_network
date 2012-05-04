@@ -13,7 +13,10 @@
 
 #include <fstream>
 #include <string>
+#include <map>
 #include <cv.h>
+
+#include "classifier/photo_result.h"
 
 namespace SocialNetwork {
 class Photo {
@@ -41,11 +44,11 @@ class Photo {
   inline const std::string &GetFilename() const {return image_file_;};
   inline const std::string &GetAssignedId() const {return assigned_id_;};
   inline const std::string &GetAssignedBy() const {return assigned_by_;};
-  inline PhotoRes& GetRes() {return res_;}; 
+  inline FaceRecognition::PhotoResult& GetPhotoRes() {return res_;}; 
 
   //void SetTrueId(const std::string &id);
   void SetAssignedId(const std::string &id, const std::string &by);
-  std::string DecideId();
+  const std::string& DecideId();
 
   cv::Mat GetImage(const std::string &prefix);
   // void ReleaseImage();
@@ -61,15 +64,16 @@ class Photo {
   std::string assigned_by_;
 
   // Some meta information used for belief propagation?
-  PhotoRes res_;
+  // PhotoRes res_;
+  FaceRecognition::PhotoResult res_;
 };
 
-struct IntCmp {
-  bool operator()(const std::pair<std::string, double>& lhs, 
-                  const std::pair<std::string, double>& rhs) {
-    return lhs.second < rhs.second;
-  };
-};
+// struct IntCmp {
+//   bool operator()(const std::pair<std::string, double>& lhs, 
+//                   const std::pair<std::string, double>& rhs) {
+//     return lhs.second < rhs.second;
+//   };
+// };
 }
 
 #endif  // DATASET_PHOTO_H_

@@ -29,6 +29,7 @@ class PCAClassifier : public BaseClassifier {
    int TrainWithUpdatedLabels(const ImageList& image_list);
    bool Identify(cv::Mat& image, std::string *id);
    bool Identify(cv::Mat& image, std::map<std::string, double>* res);
+   bool Identify(cv::Mat& image, PhotoResult* res);
 //   bool Verify() {};
 // 
 //   int Load() {};
@@ -37,7 +38,7 @@ class PCAClassifier : public BaseClassifier {
  private:
    //CvNormalBayesClassifier kernel2_;
    //CvKNearest kernel_;
-   BayesClassifier kernel2_;
+   InnerBayesClassifier kernel2_;
    cv::Mat* feature_;
    cv::PCA pca_;
    std::map<std::string, int> id_table_;

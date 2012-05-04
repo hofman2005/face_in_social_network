@@ -42,17 +42,24 @@ FILE(GLOB SRC_LIST "classifier/*.cc"
 # ADD_EXECUTABLE(social_network main.cc ${SRC_LIST})
 # TARGET_LINK_LIBRARIES(social_network ${OpenCV_LIBS})
 
-ADD_EXECUTABLE(generator_driver generator_driver.cc ${SRC_LIST})
-TARGET_LINK_LIBRARIES(generator_driver ${OpenCV_LIBS} ${Boost_LIBRARIES})
+if(COMMAND cmake_policy)
+  cmake_policy(SET CMP0003 NEW)
+endif(COMMAND cmake_policy)
 
-ADD_EXECUTABLE(contagion contagion.cc ${SRC_LIST})
-TARGET_LINK_LIBRARIES(contagion ${OpenCV_LIBS} ${Boost_LIBRARIES})
+ADD_LIBRARY(SocialNetwork ${SRC_LIST})
+# ADD_EXECUTABLE(generator_driver generator_driver.cc ${SRC_LIST})
+# TARGET_LINK_LIBRARIES(generator_driver ${OpenCV_LIBS} ${Boost_LIBRARIES})
+ADD_EXECUTABLE(generator_driver generator_driver.cc)
+TARGET_LINK_LIBRARIES(generator_driver SocialNetwork ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
-ADD_EXECUTABLE(analysis analysis.cc ${SRC_LIST})
-TARGET_LINK_LIBRARIES(analysis ${OpenCV_LIBS} ${Boost_LIBRARIES})
+ADD_EXECUTABLE(contagion contagion.cc)
+TARGET_LINK_LIBRARIES(contagion SocialNetwork ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
-ADD_EXECUTABLE(final_readout final_readout.cc ${SRC_LIST})
-TARGET_LINK_LIBRARIES(final_readout ${OpenCV_LIBS} ${Boost_LIBRARIES})
+ADD_EXECUTABLE(analysis analysis.cc)
+TARGET_LINK_LIBRARIES(analysis SocialNetwork ${OpenCV_LIBS} ${Boost_LIBRARIES})
+
+ADD_EXECUTABLE(final_readout final_readout.cc)
+TARGET_LINK_LIBRARIES(final_readout SocialNetwork ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 ADD_EXECUTABLE(baseline baseline.cc ${SRC_LIST})
 TARGET_LINK_LIBRARIES(baseline ${OpenCV_LIBS} ${Boost_LIBRARIES})

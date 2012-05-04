@@ -16,6 +16,7 @@
 
 namespace FaceRecognition {
 namespace sn = SocialNetwork;
+namespace fn = FaceRecognition;
 int TrainOnSingleAlbum(const std::string& image_prefix,
                        sn::Album* album,
                        BaseClassifier* classifier) {
@@ -64,26 +65,28 @@ int TestOnSingleAlbum(const std::string& image_prefix,
     // };
 
     // Multi candidate identification
-    std::map<std::string, double>& res = it->GetRes();
-    std::map<std::string, double> new_res;
-    classifier->Identify(image, &new_res);
+    // std::map<std::string, double>& res = it->GetRes();
+    // std::map<std::string, double> new_res;
+    // classifier->Identify(image, &new_res);
+    //  
+    // // Merge result
+    // for (std::map<std::string, double>::iterator res_it = new_res.begin();
+    //      res_it != new_res.end();
+    //      ++res_it) {
+    //   if (res.find(res_it->first)!=res.end()) {
+    //     if (res_it->second < res[res_it->first]) {
+    //       res[res_it->first] = res_it->second;
+    //     }
+    //   } else {
+    //     res[res_it->first] = res_it->second;
+    //   }
+    // }
+    fn::PhotoResult& res = it->GetPhotoRes();
+    classifier->Identify(image, &res);
 
-    // Merge result
-    for (std::map<std::string, double>::iterator res_it = new_res.begin();
-         res_it != new_res.end();
-         ++res_it) {
-      if (res.find(res_it->first)!=res.end()) {
-        if (res_it->second < res[res_it->first]) {
-          res[res_it->first] = res_it->second;
-        }
-      } else {
-        res[res_it->first] = res_it->second;
-      }
-    }
-
-    std::vector< std::pair<std::string, double> > vec(res.begin(), res.end());
-    std::sort(vec.begin(), vec.end(), sn::IntCmp());
-    std::string res_id = vec[0].first;
+    // std::vector< std::pair<std::string, double> > vec(res.begin(), res.end());
+    // std::sort(vec.begin(), vec.end(), sn::IntCmp());
+    // std::string res_id = vec[0].first;
     // const double threshold = 3.0f;
     // if (vec[1].second / vec[0].second > threshold) {
     //   res_id = vec[0].first;
@@ -91,6 +94,7 @@ int TestOnSingleAlbum(const std::string& image_prefix,
     // } else {
     //   res_id = "-";
     // }
+    std::string res_id = res.GetSortedDecision(0);
     (*it).SetAssignedId(res_id, "Baseline");
 
     // Simple analysis

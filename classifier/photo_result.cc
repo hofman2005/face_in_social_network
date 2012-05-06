@@ -28,13 +28,19 @@ double PhotoResult::GetRecord(const std::string& id) const {
 }
 
 // Rank begin with 0.
-const std::string& PhotoResult::GetSortedDecision(const int rank,
+const std::string PhotoResult::GetSortedDecision(const int rank,
                                                   double* score,
                                                   std::string* id) {
   if (cache_dirty_) sort_score();
-  if (score) *score = cache_sorted_score_[rank].second;
-  if (id) *id = cache_sorted_score_[rank].first;
-  return cache_sorted_score_[rank].first;
+  if (cache_sorted_score_.size() == 0) {
+    if(score) *score = 0;
+    if (id) *id = "-";
+    return "-";
+  } else {
+    if (score) *score = cache_sorted_score_[rank].second;
+    if (id) *id = cache_sorted_score_[rank].first;
+    return cache_sorted_score_[rank].first;
+  }
 }
 
 int PhotoResult::sort_score() {

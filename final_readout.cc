@@ -54,7 +54,9 @@ int main(int argc, char **argv) {
     for (sn::Album::iterator photo_it = it->second.begin();
          photo_it != it->second.end();
          ++photo_it) {
-      photo_it->DecideId();
+      if (photo_it->GetAssignedBy() == "God") continue;
+      std::string res = photo_it->DecideId();
+      (*photo_it).SetAssignedId(res, "Final");   
     }
   }
   

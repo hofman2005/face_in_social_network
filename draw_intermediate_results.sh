@@ -17,14 +17,14 @@ do
   sed -i -e '2inode[shape="circle", label="", height=0.2];' -e 's/style=""/style="filled"/' -e '/Infection/d' $dot_file
   neato -Tpng $dot_file -o$file.png
 
-  dot_file=`echo ${dot_file} | sed "s/\.dot/false_alarm.dot/"`
-  file=`echo ${dot_file} | sed "s/\.dot//"`
-  # sed '2inode[shape="circle", label="", height=0.2];' $dot_file > $file
-  # mv $file $dot_file
-  # sed 's/style=""/style="filled"/' $dot_file > $file
-  # mv $file $dot_file
-  # sed '/Infection/d' $dot_file > $file
-  # mv $file $dot_file
-  sed -i -e '2inode[shape="circle", label="", height=0.2];' -e 's/style=""/style="filled"/' -e '/Infection/d' $dot_file
-  neato -Tpng $dot_file -o$file.png
+  # dot_file=`echo ${dot_file} | sed "s/\.dot/false_alarm.dot/"`
+  # file=`echo ${dot_file} | sed "s/\.dot//"`
+  # # sed '2inode[shape="circle", label="", height=0.2];' $dot_file > $file
+  # # mv $file $dot_file
+  # # sed 's/style=""/style="filled"/' $dot_file > $file
+  # # mv $file $dot_file
+  # # sed '/Infection/d' $dot_file > $file
+  # # mv $file $dot_file
+  # sed -i -e '2inode[shape="circle", label="", height=0.2];' -e 's/style=""/style="filled"/' -e '/Infection/d' $dot_file
+  # neato -Tpng $dot_file -o$file.png
 done

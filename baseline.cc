@@ -13,7 +13,9 @@
 #include <boost/program_options.hpp>
 #include "dataset/social_graph.h"
 #include "classifier/pca_classifier.h"
+#include "classifier/train_test_on_album.h"
 
+/*
 namespace FaceRecognition {
 namespace sn = SocialNetwork;
 namespace fn = FaceRecognition;
@@ -117,7 +119,7 @@ int TestOnSingleAlbum(const std::string& image_prefix,
 }
 
 }
-
+*/
 int main(int argc, char** argv) {
   namespace sn = SocialNetwork;
   namespace fn = FaceRecognition;
@@ -165,6 +167,9 @@ int main(int argc, char** argv) {
   std::cout << "Loading album file: " << album_filename << std::endl;
   sn::ReadAlbumMapFromFile(album_filename, &album_map);
 
+  // Make a copy of the album map.
+  sn::AlbumMap album_map_new = album_map;
+
   // Train and test classifier on each vertex.
   sn::VertexIterator vi, vi_end;
   for (tie(vi,vi_end)=vertices(graph);
@@ -181,10 +186,11 @@ int main(int argc, char** argv) {
 
     // Test
     std::cout << "Testing on " << graph[*vi].person_id << std::endl;
-    fn::TestOnSingleAlbum(image_prefix, &classifier, &album);
+    sn::Album& album_new = album_map_new[graph[*vi].person_id];
+    fn::TestOnSingleAlbum(image_prefix, &classifier, &album_new);
   }
 
   // Save the album
   std::string output_album_file = output_prefix + ".alb";
-  sn::WriteAlbumMapToFile(album_map, output_album_file);
+  sn::WriteAlbumMapToFile(album_map_new, output_album_file);
 }

@@ -32,7 +32,7 @@ class RandomGenerators {
   //void AttachAlbumToGraph(const AlbumMap &album_map, SocialGraph *graph);
   Vertex InfectionSourceGenerator(const int number, SocialGraph *graph);
   void LabelGenerator(const SocialGraph &graph,
-                      const Vertex &start,
+                      //const Vertex &start,
                       AlbumMap *album_map); 
  private:
 };

@@ -43,6 +43,16 @@ cv::Mat Photo::GetImage(const std::string &prefix) {
 // }
 
 int Photo::ReadFromStream(std::ifstream& in) {
+  if (!in.good()) return -1;
+
+  // Check if it is an empty line.
+  char first;
+  in.get(first);
+  if (first == '\n') {
+    return 0;
+  } else {
+    in.putback(first);
+  }
   in >> true_id_ >> image_file_ >> assigned_id_ >> assigned_by_;
   // // Check if there is record for scores
   // char first;
@@ -82,7 +92,7 @@ int Photo::WriteToStream(std::ofstream& out) const {
   return 0;
 }
 
-const std::string& Photo::DecideId() {
+const std::string Photo::DecideId() {
   // if (assigned_by_ == "God") return assigned_id_;
   // std::vector< std::pair<std::string, double> > vec(res_.begin(), res_.end());
   // std::sort(vec.begin(), vec.end(), IntCmp());

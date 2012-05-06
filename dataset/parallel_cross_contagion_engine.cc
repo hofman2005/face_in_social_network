@@ -44,8 +44,9 @@ int ParallelCrossContagionEngine<Classifier>::Init() {
 
 template <class Classifier>
 int ParallelCrossContagionEngine<Classifier>::Run() {
+  const int num_iteration = 5;
 
-  for (int count=0; count<2; ++count) {
+  for (int count=0; count<num_iteration; ++count) {
     VertexIterator vi, vi_end;
     AlbumMap album_copy = *album_map_;
     int subcount = 0;
@@ -138,7 +139,7 @@ int ParallelCrossContagionEngine<Classifier>::PropagateOnSingleVertex
   for (Album::iterator it = album.begin(); it != album.end(); ++it) {
     id = (*it).GetAssignedId();
     //if ( id != "-") continue;
-    
+
     // // Do not change those initial labels
     assigned_by = (*it).GetAssignedBy();
     if (assigned_by == "God") continue;

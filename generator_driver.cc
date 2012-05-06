@@ -118,10 +118,12 @@ int main(int argc, char **argv) {
   generator.AlbumGenerator(graph, image_map, &album_map);
 
   // Generate infection sources
-  const int num_source = 2;
-  sn::Vertex source = generator.InfectionSourceGenerator(num_source, &graph);
+  // const int num_source = 2;
+  // sn::Vertex source = generator.InfectionSourceGenerator(num_source, &graph);
+
   // Assign labels
-  generator.LabelGenerator(graph, source, &album_map);
+  // generator.LabelGenerator(graph, source, &album_map);
+  generator.LabelGenerator(graph, &album_map);
   
   // Save graph
   std::string output_dot_file = output_prefix + ".dot";

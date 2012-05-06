@@ -40,15 +40,15 @@ class Photo {
       assigned_by_(assigned_by) {};
   ~Photo();
 
-  inline const std::string &GetTrueId() const {return true_id_;};
-  inline const std::string &GetFilename() const {return image_file_;};
-  inline const std::string &GetAssignedId() const {return assigned_id_;};
-  inline const std::string &GetAssignedBy() const {return assigned_by_;};
+  inline const std::string& GetTrueId() const {return true_id_;};
+  inline const std::string& GetFilename() const {return image_file_;};
+  inline const std::string& GetAssignedId() const {return assigned_id_;};
+  inline const std::string& GetAssignedBy() const {return assigned_by_;};
   inline FaceRecognition::PhotoResult& GetPhotoRes() {return res_;}; 
 
   //void SetTrueId(const std::string &id);
   void SetAssignedId(const std::string &id, const std::string &by);
-  const std::string& DecideId();
+  const std::string DecideId();
 
   cv::Mat GetImage(const std::string &prefix);
   // void ReleaseImage();

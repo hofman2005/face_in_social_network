@@ -102,8 +102,9 @@ int main(int argc, char **argv) {
   // Save graph
   std::string output_dot_file = output_prefix + ".dot";
   sn::WriteGraphToFile(graph, output_dot_file);
-  output_dot_file = output_prefix + "false_alarm.dot";
-  sn::WriteGraphToFile(false_alarm_graph, output_dot_file);
+  // output_dot_file = output_prefix + "false_alarm.dot";
+  // sn::WriteGraphToFile(false_alarm_graph, output_dot_file);
+
   // Save the album
   // std::string output_album_file = output_prefix + ".alb";
   // sn::WriteAlbumMapToFile(album_map, output_album_file);

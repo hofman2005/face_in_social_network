@@ -15,14 +15,14 @@
 namespace SocialNetwork {
 // This function assgin thres% labels for the images of each person.
 void RandomGenerators::LabelGenerator(const SocialGraph &graph,
-                                      const Vertex &start,
+                                      //const Vertex &start,
                                       AlbumMap *album_map) {
   // Assign the labels in album.
   VertexIterator ver_it, ver_it_end; 
   tie(ver_it, ver_it_end) = vertices(graph);
   std::string id;
  
-  const int thres = 3000; // thres/10000 percent
+  const int thres = 1000; // thres/10000 percent
 
   for (; ver_it != ver_it_end; ++ver_it) {
     id = graph[*ver_it].person_id;

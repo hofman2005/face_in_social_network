@@ -33,7 +33,7 @@ INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
 INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}")
 FILE(GLOB SRC_LIST "classifier/*.cc" 
   "dataset/*.cc" 
-  "fr_engine/*.cc"
+#  "fr_engine/*.cc"
   "graph/*.cc" 
   "random_generator/*.cc")
   #"*.cc")
@@ -61,5 +61,8 @@ TARGET_LINK_LIBRARIES(analysis SocialNetwork ${OpenCV_LIBS} ${Boost_LIBRARIES})
 ADD_EXECUTABLE(final_readout final_readout.cc)
 TARGET_LINK_LIBRARIES(final_readout SocialNetwork ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
-ADD_EXECUTABLE(baseline baseline.cc ${SRC_LIST})
-TARGET_LINK_LIBRARIES(baseline ${OpenCV_LIBS} ${Boost_LIBRARIES})
+ADD_EXECUTABLE(baseline baseline.cc)
+TARGET_LINK_LIBRARIES(baseline SocialNetwork ${OpenCV_LIBS} ${Boost_LIBRARIES})
+
+ADD_EXECUTABLE(baseline_all baseline_all.cc)
+TARGET_LINK_LIBRARIES(baseline_all SocialNetwork ${OpenCV_LIBS} ${Boost_LIBRARIES})

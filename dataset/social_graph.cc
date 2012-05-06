@@ -99,8 +99,9 @@ void ReadAlbumMapFromFile(const std::string &input_file,
       //Photo *photo = new Photo(content, file, assigned_id, assigned_by);
       in.putback(first);
       Photo *photo = new Photo;
-      photo->ReadFromStream(in);
-      (*album)[current_id].push_back(*photo);
+      if(photo->ReadFromStream(in) == 0) {
+        (*album)[current_id].push_back(*photo);
+      }
     }
   }
 }

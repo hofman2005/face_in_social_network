@@ -15,9 +15,9 @@ class PhotoResult {
   double GetRecord(const std::string& id) const;
   inline int GetNumRecord() const {return score_map_.size();};
   
-  const std::string& GetSortedDecision(const int rank,
-                                       double* score = NULL,
-                                       std::string* id = NULL); // Score are sorted in ascending order.
+  const std::string GetSortedDecision(const int rank,
+                                      double* score = NULL,
+                                      std::string* id = NULL); // Score are sorted in ascending order.
   
   std::istream& ReadFromStream(std::istream& in);
   std::ostream& WriteToStream(std::ostream& out) const;

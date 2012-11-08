@@ -41,11 +41,14 @@ class PersonProperty {
   void SetColor(const int r, const int g, const int b);
   int GetColor();
   void GetColor(int *r, int *g, int *b);
+
+  void SetAccuracy(const std::string& value) {accuracy=value;};
  
  public:
   std::string person_id;
   std::string color;
   std::string style;
+  std::string accuracy;
 };
 
 class PropertyWriter {

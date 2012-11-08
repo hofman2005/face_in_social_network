@@ -87,12 +87,23 @@ int main(int argc, char **argv) {
       int a=0;
       graph[*ver_it].SetColor(0, 0, 0);
       false_alarm_graph[*ver_it].SetColor(0,0,0);
+      // Set accuracy
+      std::ostringstream ss;
+      ss << std::setprecision(4) << "0.00%";
+      graph[*ver_it].accuracy = ss.str();
     }
     if (count!=0) {
       color = correct_count * 255 / count;
       graph[*ver_it].SetColor(0, color, 0);
       color = wrong_count * 255 / count;
       false_alarm_graph[*ver_it].SetColor(color, 0, 0);
+
+      // Set accuracy
+      float accuracy = (float)(correct_count) / (float)(count);
+      std::ostringstream ss;
+      ss << std::setprecision(4) << accuracy * 100 << "%";
+      graph[*ver_it].accuracy = ss.str();
+      
       std::cout << "Accuracy " << correct_count << " of " << count 
         << " False alarm " << wrong_count << std::endl;
     }

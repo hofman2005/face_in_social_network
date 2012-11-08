@@ -46,6 +46,7 @@ void PropertyWriter::operator() (std::ostream& out,
                                  const SocialNetwork::Vertex& v) {
   out << "[color=\"" << g_[v].color
       << "\",style=\"" << g_[v].style
+      << "\",accuracy=\"" << g_[v].accuracy
       << "\"]";
 }
 
@@ -73,6 +74,7 @@ void ReadGraphFromFile(const std::string &input_file,
   dp.property("label", get(&PersonProperty::person_id, *graph));
   dp.property("color", get(&PersonProperty::color, *graph));
   dp.property("style", get(&PersonProperty::style, *graph));
+  dp.property("accuracy", get(&PersonProperty::accuracy, *graph));
 
   std::ifstream in(input_file.c_str());
   boost::read_graphviz(in, *graph, dp, "label");

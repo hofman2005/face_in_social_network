@@ -1,7 +1,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 01 May 2012 04:34:54 PM
+# Last-modified: 08 Nov 2012 05:26:52 PM
 #
 # Filename: CMakeLists.txt
 #
@@ -51,6 +51,12 @@ ADD_LIBRARY(SocialNetwork ${SRC_LIST})
 # TARGET_LINK_LIBRARIES(generator_driver ${OpenCV_LIBS} ${Boost_LIBRARIES})
 ADD_EXECUTABLE(generator_driver generator_driver.cc)
 TARGET_LINK_LIBRARIES(generator_driver SocialNetwork ${OpenCV_LIBS} ${Boost_LIBRARIES})
+
+ADD_EXECUTABLE(album_generator album_generator.cc)
+TARGET_LINK_LIBRARIES(album_generator SocialNetwork ${OpenCV_LIBS} ${Boost_LIBRARIES})
+
+ADD_EXECUTABLE(degree_distribution data_script/degree_distribution.cc)
+TARGET_LINK_LIBRARIES(degree_distribution SocialNetwork ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 ADD_EXECUTABLE(contagion contagion.cc)
 TARGET_LINK_LIBRARIES(contagion SocialNetwork ${OpenCV_LIBS} ${Boost_LIBRARIES})

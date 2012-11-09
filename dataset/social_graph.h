@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 16 Apr 2012 02:10:02 AM
+# Last-modified: 08 Nov 2012 03:40:14 PM
 #
 # Filename: social_graph.h
 #
@@ -30,11 +30,6 @@ typedef boost::adjacency_list<boost::listS,
                               boost::undirectedS, 
                               PersonProperty> SocialGraph;
 
-typedef boost::graph_traits<SocialGraph>::vertex_descriptor Vertex;
-typedef boost::graph_traits<SocialGraph>::vertex_iterator VertexIterator;
-typedef boost::graph_traits<SocialGraph>::adjacency_iterator AdjacencyIterator;
-typedef boost::graph_traits<SocialGraph>::edge_descriptor Edge;
-
 class PersonProperty {
  public:
   void SetColor(const int value);
@@ -50,6 +45,11 @@ class PersonProperty {
   std::string style;
   std::string accuracy;
 };
+
+typedef boost::graph_traits<SocialGraph>::vertex_descriptor Vertex;
+typedef boost::graph_traits<SocialGraph>::vertex_iterator VertexIterator;
+typedef boost::graph_traits<SocialGraph>::adjacency_iterator AdjacencyIterator;
+typedef boost::graph_traits<SocialGraph>::edge_descriptor Edge;
 
 class PropertyWriter {
  public:

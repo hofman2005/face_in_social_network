@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 07 Mar 2012 04:24:33 PM
+# Last-modified: 09 Nov 2012 02:12:04 PM
 #
 # Filename: random_generators.cc
 #
@@ -10,10 +10,19 @@
 
 #include "random_generator/random_generators.h"
 #include "assert.h"
+#include <algorithm>
+#include <string>
+#include <vector>
 #include <utility>
 #include <iostream>
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
 namespace SocialNetwork {
+
+  using namespace std;
 
 void RandomGenerators::AssignID(const AlbumMap &image_map, SocialGraph *graph) {
   // Check
@@ -22,16 +31,36 @@ void RandomGenerators::AssignID(const AlbumMap &image_map, SocialGraph *graph) {
   // Assign
   std::pair<VertexIterator, VertexIterator> vertex_it = vertices(*graph);
   AlbumMap::const_iterator image_map_it = image_map.begin();
-  // int i=0;
+
+  // Random assign ID
+  srand( time(NULL) ); 
+  vector<string> ids;
   while (image_map_it != image_map.end()) {
-    (*graph)[*(vertex_it.first)].person_id = (*image_map_it).first;
-    //(*graph)[*(vertex_it.first)].SetColor(i*255/568, 128, 255-i*255/568);
+    ids.push_back((*image_map_it).first);
+    ++image_map_it;
+  }
+
+  unsigned int count = ids.size();
+  while (vertex_it.first != vertex_it.second && count >=1) {
+    unsigned int i = (rand() << 16 + rand()) % count;
+    (*graph)[*(vertex_it.first)].person_id = ids[i];
     (*graph)[*(vertex_it.first)].SetColor(0);
 
+    swap(ids[i], ids[count-1]);
+
     ++vertex_it.first;
-    ++image_map_it;
-    // ++i;
+    --count;
   }
+
+  // while (image_map_it != image_map.end()) {
+  //   (*graph)[*(vertex_it.first)].person_id = (*image_map_it).first;
+  //   //(*graph)[*(vertex_it.first)].SetColor(i*255/568, 128, 255-i*255/568);
+  //   (*graph)[*(vertex_it.first)].SetColor(0);
+
+  //   ++vertex_it.first;
+  //   ++image_map_it;
+  //   // ++i;
+  // }
 }
 
 void RandomGenerators::AlbumGenerator(const SocialGraph &graph,

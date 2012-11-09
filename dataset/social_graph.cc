@@ -2,13 +2,14 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 01 May 2012 02:21:58 AM
+# Last-modified: 09 Nov 2012 04:09:11 PM
 #
 # Filename: social_graph.cc
 #
 =========================================*/
 
 #include "dataset/social_graph.h"
+#include <sstream>
 
 namespace SocialNetwork {
 
@@ -101,7 +102,9 @@ void ReadAlbumMapFromFile(const std::string &input_file,
       //Photo *photo = new Photo(content, file, assigned_id, assigned_by);
       in.putback(first);
       Photo *photo = new Photo;
-      if(photo->ReadFromStream(in) == 0) {
+      getline(in, content);
+      std::istringstream iss_content(content);
+      if(photo->ReadFromStream(iss_content) == 0) {
         (*album)[current_id].push_back(*photo);
       }
     }

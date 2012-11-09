@@ -1,7 +1,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 08 Nov 2012 05:26:52 PM
+# Last-modified: 09 Nov 2012 04:15:30 PM
 #
 # Filename: CMakeLists.txt
 #
@@ -57,6 +57,9 @@ TARGET_LINK_LIBRARIES(album_generator SocialNetwork ${OpenCV_LIBS} ${Boost_LIBRA
 
 ADD_EXECUTABLE(degree_distribution data_script/degree_distribution.cc)
 TARGET_LINK_LIBRARIES(degree_distribution SocialNetwork ${OpenCV_LIBS} ${Boost_LIBRARIES})
+
+ADD_EXECUTABLE(graph_utility_test graph_utility_test.cc)
+TARGET_LINK_LIBRARIES(graph_utility_test SocialNetwork ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 ADD_EXECUTABLE(contagion contagion.cc)
 TARGET_LINK_LIBRARIES(contagion SocialNetwork ${OpenCV_LIBS} ${Boost_LIBRARIES})

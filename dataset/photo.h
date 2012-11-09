@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 01 May 2012 03:16:47 AM
+# Last-modified: 09 Nov 2012 04:30:55 PM
 #
 # Filename: photo.h
 #
@@ -54,7 +54,7 @@ class Photo {
   // void ReleaseImage();
   
   int WriteToStream(std::ofstream& out) const;
-  int ReadFromStream(std::ifstream& in);
+  int ReadFromStream(std::istringstream& in);
 
  private:
   std::string true_id_;
@@ -68,12 +68,6 @@ class Photo {
   FaceRecognition::PhotoResult res_;
 };
 
-// struct IntCmp {
-//   bool operator()(const std::pair<std::string, double>& lhs, 
-//                   const std::pair<std::string, double>& rhs) {
-//     return lhs.second < rhs.second;
-//   };
-// };
 }
 
 #endif  // DATASET_PHOTO_H_

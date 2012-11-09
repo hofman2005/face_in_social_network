@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 08 Nov 2012 03:40:14 PM
+# Last-modified: 09 Nov 2012 03:15:50 PM
 #
 # Filename: social_graph.h
 #
@@ -16,6 +16,8 @@
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/breadth_first_search.hpp>
 #include <boost/graph/graphviz.hpp>
+#include <map>
+#include <string>
 #include "dataset/photo.h"
 
 namespace SocialNetwork {
@@ -28,7 +30,7 @@ class PersonProperty;
 typedef boost::adjacency_list<boost::listS, 
                               boost::vecS, 
                               boost::undirectedS, 
-                              PersonProperty> SocialGraph;
+                              PersonProperty> _SocialGraph;
 
 class PersonProperty {
  public:
@@ -46,10 +48,20 @@ class PersonProperty {
   std::string accuracy;
 };
 
-typedef boost::graph_traits<SocialGraph>::vertex_descriptor Vertex;
-typedef boost::graph_traits<SocialGraph>::vertex_iterator VertexIterator;
-typedef boost::graph_traits<SocialGraph>::adjacency_iterator AdjacencyIterator;
-typedef boost::graph_traits<SocialGraph>::edge_descriptor Edge;
+typedef boost::graph_traits<_SocialGraph>::vertex_descriptor Vertex;
+typedef boost::graph_traits<_SocialGraph>::vertex_iterator VertexIterator;
+typedef boost::graph_traits<_SocialGraph>::adjacency_iterator AdjacencyIterator;
+typedef boost::graph_traits<_SocialGraph>::edge_descriptor Edge;
+
+// TODO
+// This is not a safe practice. Needs to refactor the code.
+class SocialGraph : public _SocialGraph {
+  public:
+    SocialGraph() : _SocialGraph() {};
+    SocialGraph(int a) : _SocialGraph(a) {};
+
+    std::map<std::string, Vertex> label_map_;
+};
 
 class PropertyWriter {
  public:

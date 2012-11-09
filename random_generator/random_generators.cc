@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 09 Nov 2012 02:12:04 PM
+# Last-modified: 09 Nov 2012 03:50:59 PM
 #
 # Filename: random_generators.cc
 #
@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <string>
 #include <vector>
+#include <deque>
 #include <utility>
 #include <iostream>
 
@@ -46,6 +47,8 @@ void RandomGenerators::AssignID(const AlbumMap &image_map, SocialGraph *graph) {
     (*graph)[*(vertex_it.first)].person_id = ids[i];
     (*graph)[*(vertex_it.first)].SetColor(0);
 
+    graph->label_map_[ids[i]] = *(vertex_it.first);
+
     swap(ids[i], ids[count-1]);
 
     ++vertex_it.first;
@@ -66,27 +69,76 @@ void RandomGenerators::AssignID(const AlbumMap &image_map, SocialGraph *graph) {
 void RandomGenerators::AlbumGenerator(const SocialGraph &graph,
                                       const AlbumMap &image_map,
                                       AlbumMap *album_map) {
-  // Everyone's album contains all the images of himself and his step1 friends
-  std::pair<VertexIterator, VertexIterator> vertex_it = vertices(graph);
-  std::pair<AdjacencyIterator, AdjacencyIterator> friends_it;
-  for (; vertex_it.first != vertex_it.second; ++vertex_it.first) {
-    friends_it = boost::adjacent_vertices(*(vertex_it.first), graph);
-    const std::string &current_id = graph[*(vertex_it.first)].person_id;
-    Album &current_album = (*album_map)[current_id];
+  // // Everyone's album contains all the images of himself and his step1 friends
+  // std::pair<VertexIterator, VertexIterator> vertex_it = vertices(graph);
+  // std::pair<AdjacencyIterator, AdjacencyIterator> friends_it;
+  // for (; vertex_it.first != vertex_it.second; ++vertex_it.first) {
+  //   friends_it = boost::adjacent_vertices(*(vertex_it.first), graph);
+  //   const std::string &current_id = graph[*(vertex_it.first)].person_id;
+  //   Album &current_album = (*album_map)[current_id];
 
-    const Album &self_album = image_map.find(current_id)->second;
-    current_album.insert(current_album.end(),
-                         self_album.begin(),
-                         self_album.end());
+  //   const Album &self_album = image_map.find(current_id)->second;
+  //   current_album.insert(current_album.end(),
+  //                        self_album.begin(),
+  //                        self_album.end());
 
-    for (; friends_it.first != friends_it.second; ++friends_it.first) {
-      const std::string &neighbor_id = graph[*(friends_it.first)].person_id;
-      const Album &neighbor_album = image_map.find(neighbor_id)->second;
-      current_album.insert(current_album.end(), 
-                           neighbor_album.begin(), 
-                           neighbor_album.end());
+  //   for (; friends_it.first != friends_it.second; ++friends_it.first) {
+  //     const std::string &neighbor_id = graph[*(friends_it.first)].person_id;
+  //     const Album &neighbor_album = image_map.find(neighbor_id)->second;
+  //     current_album.insert(current_album.end(), 
+  //                          neighbor_album.begin(), 
+  //                          neighbor_album.end());
+  //   }
+  // }
+  
+  // The probability of an image appears in one album depends on the distance
+  // between the image's owner to the album's owner.
+  std::deque<Vertex> visit_queue_1, visit_queue_2;
+  int count = 0;
+  for (AlbumMap::const_iterator image_it = image_map.begin();
+       image_it != image_map.end();
+       ++image_it, ++count) {
+    const std::string& current_id = image_it->first;
+    // std::cout << "Generating album. Processing image set: " 
+    std::cout << count << " of " << image_map.size() << "\r";
+
+    Vertex current_vertex = graph.label_map_.find(current_id)->second;
+
+    visit_queue_1.clear();
+    visit_queue_2.clear();
+    visit_queue_1.push_back(current_vertex);
+
+    int dist = 0;
+    const int FARTHEST_APPEAR = 2;
+    while (dist <= FARTHEST_APPEAR) {
+      while (!visit_queue_1.empty()) {
+        Vertex vertex = visit_queue_1.front();
+        visit_queue_1.pop_front();
+        // Decide if add image.
+        const std::string &current_id = graph[vertex].person_id;
+        Album &current_album = (*album_map)[current_id];
+        for (Album::const_iterator photo_it = image_it->second.begin();
+            photo_it != image_it->second.end();
+            ++photo_it) {
+          int prob = rand() % 1000;
+          if (dist == 0 && prob < 995 ||
+              dist == 1 && prob < 500 ||
+              dist == 2 && prob < 50) {
+            current_album.push_back(*photo_it);
+          }
+        }
+
+        // Maintain the queue.
+        std::pair<AdjacencyIterator, AdjacencyIterator> friends_it = boost::adjacent_vertices(vertex, graph);
+        for (; friends_it.first != friends_it.second; ++friends_it.first) {
+          visit_queue_2.push_back(*friends_it.first);
+        }
+      }
+      visit_queue_1.swap(visit_queue_2);
+      ++dist;
     }
   }
+  std::cout << "Album generation done. " << std::endl;
 }
 
 }

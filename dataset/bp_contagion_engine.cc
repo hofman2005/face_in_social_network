@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 10 Nov 2012 03:39:57 PM
+# Last-modified: 10 Nov 2012 03:44:38 PM
 #
 # Filename: bp_contagion_engine.cc
 #
@@ -130,7 +130,7 @@ bool BeliefPropagationContagionEngine<Classifier>::MakeDecisionOnSingleVertex (A
       double score_0, score_1;
       res.GetSortedDecision(0, &score_0, &id_0);
       res.GetSortedDecision(1, &score_1, &id_1);
-      if (score_1 / score_0 > threshold) {
+      if (score_0 / score_1 > threshold) {
         res_id = id_0;
         if (it->GetAssignedId() != res_id) {
           it->SetAssignedId(res_id, "n/a");

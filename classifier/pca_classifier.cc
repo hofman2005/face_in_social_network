@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 30 Apr 2012 01:44:19 PM
+# Last-modified: 10 Nov 2012 03:45:12 PM
 #
 # Filename: pca_classifier.cc
 #
@@ -152,7 +152,7 @@ bool PCAClassifier::Identify(cv::Mat& image, PhotoResult* res) {
     //(*res)[id_table_reverse_[static_cast<int>(it->first)]] = it->second;
     const std::string& id = id_table_reverse_[static_cast<int>(it->first)];
     double& score = it->second;
-    res->AddRecord(id, score);
+    res->AddRecord(id, 1.0/score);
   }
 
   // FOR DEBUG

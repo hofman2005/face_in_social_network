@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 09 Nov 2012 02:15:48 PM
+# Last-modified: 09 Nov 2012 10:48:13 PM
 #
 # Filename: album_generator.cc
 #
@@ -80,6 +80,10 @@ int main(int argc, char ** argv) {
   sn::RandomGenerators generator;
   generator.AssignID(image_map, &graph);
 
+  // Generate labels
+  const double label_percent = 0.3;
+  generator.LabelGenerator2(&image_map, label_percent);
+
   // Generate the albums
   sn::AlbumMap album_map;
   generator.AlbumGenerator(graph, image_map, &album_map);
@@ -90,4 +94,6 @@ int main(int argc, char ** argv) {
   // Save the album
   std::string output_album_file = output_prefix + ".alb";
   sn::WriteAlbumMapToFile(album_map, output_album_file);
+
+  sn::WriteAlbumMapToFile(image_map, "/tmp/image_map.alb");
  }

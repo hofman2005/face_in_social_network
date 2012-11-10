@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 08 Mar 2012 04:16:55 PM
+# Last-modified: 09 Nov 2012 10:36:42 PM
 #
 # Filename: random_generators.h
 #
@@ -34,6 +34,7 @@ class RandomGenerators {
   void LabelGenerator(const SocialGraph &graph,
                       //const Vertex &start,
                       AlbumMap *album_map); 
+  void LabelGenerator2(AlbumMap *image_map, double label_percent);
  private:
 };
 

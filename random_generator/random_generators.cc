@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 09 Nov 2012 03:50:59 PM
+# Last-modified: 09 Nov 2012 11:30:43 PM
 #
 # Filename: random_generators.cc
 #
@@ -43,7 +43,7 @@ void RandomGenerators::AssignID(const AlbumMap &image_map, SocialGraph *graph) {
 
   unsigned int count = ids.size();
   while (vertex_it.first != vertex_it.second && count >=1) {
-    unsigned int i = (rand() << 16 + rand()) % count;
+    unsigned int i = rand() % count;
     (*graph)[*(vertex_it.first)].person_id = ids[i];
     (*graph)[*(vertex_it.first)].SetColor(0);
 

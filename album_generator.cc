@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 09 Nov 2012 10:48:13 PM
+# Last-modified: 10 Nov 2012 09:54:43 AM
 #
 # Filename: album_generator.cc
 #
@@ -14,6 +14,9 @@
 #include <boost/program_options.hpp>
 #include "dataset/social_graph.h"
 #include "random_generator/random_generators.h"
+
+#include <stdlib.h>
+#include <time.h>
 
 int main(int argc, char ** argv) {
   namespace sn = SocialNetwork;
@@ -72,8 +75,26 @@ int main(int argc, char ** argv) {
   std::cout << "Nodes in graph: " << num_nodes << std::endl;
   std::cout << "Subjects in image dataset: " << num_subjects << std::endl;
 
-  if (num_nodes != num_subjects) {
-    std::cout << "TODO: need to add support for num_nodes != num_subjects" << std::endl;
+  // If the network has fewer nodes than the image_map
+  if (num_nodes < num_subjects) {
+    std::vector<std::string> ids;
+    ids.reserve(image_map.size());
+    for (sn::AlbumMap::const_iterator it = image_map.begin();
+        it != image_map.end();
+        ++it) {
+      ids.push_back(it->first);
+    }
+    srand( time(NULL) );
+    sn::AlbumMap temp_album;
+    for (int i = 0; i < num_nodes; ++i) {
+      int j = rand() % (num_subjects - i);
+      temp_album[ids[j]] = image_map[ids[j]];
+      std::swap(ids[j], ids[num_subjects-i-1]);
+    }
+    image_map.swap(temp_album);
+  }
+  if (num_nodes > num_subjects) {
+    std::cout << "TODO: need to add support for num_nodes > num_subjects" << std::endl;
     return 0;
   }
 

@@ -1,7 +1,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 09 Nov 2012 04:15:30 PM
+# Last-modified: 10 Nov 2012 09:48:13 AM
 #
 # Filename: CMakeLists.txt
 #
@@ -49,6 +49,9 @@ endif(COMMAND cmake_policy)
 ADD_LIBRARY(SocialNetwork ${SRC_LIST})
 # ADD_EXECUTABLE(generator_driver generator_driver.cc ${SRC_LIST})
 # TARGET_LINK_LIBRARIES(generator_driver ${OpenCV_LIBS} ${Boost_LIBRARIES})
+
+ADD_EXECUTABLE(extract_standford data_script/extract_sub_v2.cc)
+
 ADD_EXECUTABLE(generator_driver generator_driver.cc)
 TARGET_LINK_LIBRARIES(generator_driver SocialNetwork ${OpenCV_LIBS} ${Boost_LIBRARIES})
 

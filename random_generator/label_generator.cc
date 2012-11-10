@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 09 Nov 2012 11:43:59 PM
+# Last-modified: 10 Nov 2012 09:55:12 AM
 #
 # Filename: label_generator.cc
 #
@@ -83,7 +83,7 @@ void RandomGenerators::LabelGenerator2(AlbumMap *image_map, double label_percent
       advance(it,j);
       k = (k + retry_step[retry]) % it->second.size();
       ++retry;
-      std::cout << "Retry: " << retry << std::endl;
+      // std::cout << "Retry: " << retry << std::endl;
     }
 
     Album& album = it->second;

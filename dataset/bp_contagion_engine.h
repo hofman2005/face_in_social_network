@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 10 Nov 2012 12:51:11 PM
+# Last-modified: 10 Nov 2012 03:28:19 PM
 #
 # Filename: bp_contagion_engine.h
 #
@@ -15,6 +15,7 @@
 #include "classifier/base_classifier.h"
 
 #include <deque>
+#include <set>
 
 namespace SocialNetwork {
 template <class Classifier>
@@ -36,11 +37,13 @@ class BeliefPropagationContagionEngine : public BaseContagionEngine {
     int TrainOnSingleVertex(Vertex current);
     // int PropagateOnSingleVertex(Vertex base, Vertex current);
     int PropagateOnSingleVertex(const Vertex base, const Vertex current, AlbumMap* album_map);
+    bool MakeDecisionOnSingleVertex(Album* album);
     int ReleaseAllClassifiers();
 
     std::vector<FaceRecognition::BaseClassifier*> classifiers_;
 
     std::deque<Vertex> visit_queue_1_, visit_queue_2_;
+    std::set<Vertex> need_decision_set_;
 };
 }
 

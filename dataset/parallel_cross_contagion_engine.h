@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 01 May 2012 03:16:50 AM
+# Last-modified: 10 Nov 2012 10:47:21 AM
 #
 # Filename: parallel_cross_contagion_engine.h
 #
@@ -20,14 +20,14 @@ class ParallelCrossContagionEngine : public BaseContagionEngine {
  public:
   ParallelCrossContagionEngine(const std::string& image_prefix, SocialGraph* graph, AlbumMap* album_map)
     : BaseContagionEngine(image_prefix, graph, album_map) {};
-  ~ParallelCrossContagionEngine();
+  virtual ~ParallelCrossContagionEngine();
 
   int Init();
   int Run();
 
  private:
   int TrainOnSingleVertex(Vertex current);
-  int PropagateOnSingleVertex(Vertex base, Vertex current);
+  // int PropagateOnSingleVertex(Vertex base, Vertex current);
   int PropagateOnSingleVertex(const Vertex base, const Vertex current, AlbumMap* album_map);
   int ReleaseAllClassifiers();
 

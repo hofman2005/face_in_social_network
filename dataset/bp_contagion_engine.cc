@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 10 Nov 2012 03:44:38 PM
+# Last-modified: 11 Nov 2012 10:51:02 PM
 #
 # Filename: bp_contagion_engine.cc
 #
@@ -71,6 +71,9 @@ int BeliefPropagationContagionEngine<Classifier>::Run() {
     int subcount = 0;
     need_decision_set_.clear();
     while (!visit_queue_1_.empty()) {
+      std::cout << "Iter: " << iter
+        << " Length of visit queue_1: " << visit_queue_1_.size()
+        << " Length of need_desicion: " << need_decision_set_.size() << std::endl;
       Vertex current = visit_queue_1_.front();
       visit_queue_1_.pop_front();
 
@@ -108,6 +111,8 @@ int BeliefPropagationContagionEngine<Classifier>::Run() {
     visit_queue_1_.swap(visit_queue_2_);
     album_map_->swap(album_copy);
     ++iter;
+
+    std::cout << "Number of points need to be visited in new iteration: " << visit_queue_1_.size() << std::endl;
   }
 
   return 0;
@@ -130,7 +135,7 @@ bool BeliefPropagationContagionEngine<Classifier>::MakeDecisionOnSingleVertex (A
       double score_0, score_1;
       res.GetSortedDecision(0, &score_0, &id_0);
       res.GetSortedDecision(1, &score_1, &id_1);
-      if (score_0 / score_1 > threshold) {
+      if (fabs(score_1 / score_0) > threshold) {
         res_id = id_0;
         if (it->GetAssignedId() != res_id) {
           it->SetAssignedId(res_id, "n/a");
@@ -185,12 +190,14 @@ int BeliefPropagationContagionEngine<Classifier>::TrainOnSingleVertex(Vertex cur
   bool load_image = !classifiers_[current]->IsTrained();
   FaceRecognition::ImageList image_list;
   AppendTrainingImageList(current, &image_list);
-  AdjacencyIterator adj, adj_end;
-  for (tie(adj, adj_end) = adjacent_vertices(current, *graph_); 
-      adj != adj_end;
-      ++adj) {
-    AppendTrainingImageList(*adj, &image_list, load_image);
-  }
+
+  // Append the images in friends.
+  // AdjacencyIterator adj, adj_end;
+  // for (tie(adj, adj_end) = adjacent_vertices(current, *graph_); 
+  //     adj != adj_end;
+  //     ++adj) {
+  //   AppendTrainingImageList(*adj, &image_list, load_image);
+  // }
 
   // Train
   if (classifiers_[current]->IsTrained()) {
@@ -203,7 +210,7 @@ int BeliefPropagationContagionEngine<Classifier>::TrainOnSingleVertex(Vertex cur
   for (FaceRecognition::ImageList::iterator it = image_list.begin();
        it!=image_list.end();
        ++it) {
-    delete (*it).first;
+    delete it->first;
   }
 
   return 0;
@@ -232,18 +239,18 @@ int BeliefPropagationContagionEngine<Classifier>::PropagateOnSingleVertex
   float decision_count = 0;
   int num_label_changed = 0;
   for (Album::iterator it = album.begin(); it != album.end(); ++it) {
-    id = (*it).GetAssignedId();
+    id = it->GetAssignedId();
 
     // Do not change those initial labels
-    assigned_by = (*it).GetAssignedBy();
-    if (assigned_by == "God") continue;
+    assigned_by = it->GetAssignedBy();
+    // if (assigned_by == "God") continue;
+    if (assigned_by != "-") continue;
 
     // Load the image
-    cv::Mat image  = (*it).GetImage(image_prefix_);
+    cv::Mat image  = it->GetImage(image_prefix_);
 
     // Identify
-    // TODO merge results
-    FaceRecognition::PhotoResult& res = (*it).GetPhotoRes();
+    FaceRecognition::PhotoResult& res = it->GetPhotoRes();
     pclassifier->Identify(image, &res); 
 
     // // Make a decision.

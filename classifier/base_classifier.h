@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 24 Apr 2012 03:55:20 PM
+# Last-modified: 10 Nov 2012 09:47:57 PM
 #
 # Filename: classifier.h
 #
@@ -47,7 +47,7 @@ class BaseClassifier {
   virtual bool Identify(cv::Mat& image, std::map<std::string, double>* res)
     {std::cout << "Dummy Identify ver2." << std::endl; return false;};
 
-  virtual bool Identify(cv::Mat& image, PhotoResult* res)
+  virtual bool Identify(const cv::Mat& image, PhotoResult* res)
     {std::cout << "Dummy Identify ver3." << std::endl; return false;};
 
   virtual bool Verify() {return false;};

@@ -5,18 +5,18 @@
 namespace FaceRecognition {
 int PhotoResult::AddRecord(const std::string& id, const double score) {
   // Merge
-  // if (score_map_.find(id) != score_map_.end()) {
-  //   if (score < score_map_[id]) {
-  //     score_map_[id] = score;
-  //     cache_dirty_ = true;
-  //   }
-  // } else {
-  //   score_map_[id] = score;
-  //   cache_dirty_ = true;
-  // }
+  if (score_map_.find(id) != score_map_.end()) {
+    if (score < score_map_[id]) {
+      score_map_[id] = score;
+      cache_dirty_ = true;
+    }
+  } else {
+    score_map_[id] = score;
+    cache_dirty_ = true;
+  }
 
-  score_map_[id] += score;
-  cache_dirty_ = true;
+  // score_map_[id] += score;
+  // cache_dirty_ = true;
   
   return 0;
 }

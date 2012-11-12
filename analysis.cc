@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 27 Apr 2012 01:11:26 PM
+# Last-modified: 12 Nov 2012 02:03:36 AM
 #
 # Filename: analysis.cc
 #
@@ -61,6 +61,9 @@ int main(int argc, char **argv) {
   tie(ver_it, ver_it_end) = vertices(graph);
 
   sn::SocialGraph false_alarm_graph = graph;
+
+  float total_count = 0;
+  float total_correct_count = 0;
   
   for (; ver_it != ver_it_end; ++ver_it) {
     std::string &id = graph[*ver_it].person_id;
@@ -104,10 +107,15 @@ int main(int argc, char **argv) {
       ss << std::setprecision(4) << accuracy * 100 << "%";
       graph[*ver_it].accuracy = ss.str();
       
-      std::cout << "Accuracy " << correct_count << " of " << count 
-        << " False alarm " << wrong_count << std::endl;
+      // std::cout << "Accuracy " << correct_count << " of " << count 
+      //   << " False alarm " << wrong_count << std::endl;
+
+      total_count += count;
+      total_correct_count += correct_count;
     }
   }
+
+  std::cout << "Overall accuracy: " << total_correct_count / total_count * 100.0 << "%" << std::endl;
 
   // Save result
   // Save graph

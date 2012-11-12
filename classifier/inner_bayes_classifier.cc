@@ -395,12 +395,14 @@ float InnerBayesClassifier::predict( const CvMat* samples, CvMat* results ) cons
 int InnerBayesClassifier::predict(const CvMat* samples, std::map<int, double>* res) const {
   float value = 0;
   const int* vidx = var_idx ? var_idx->data.i : 0;
-  CvMat results;
+  CvMat* results = cvCreateMat(samples->rows,1,CV_32FC1);
  
   cv::parallel_for(cv::BlockedRange(0, samples->rows), 
     predict_body(c, cov_rotate_mats, inv_eigen_values, avg, samples,
-                 vidx, cls_labels, &results, &value, var_count, res)
+                 vidx, cls_labels, results, &value, var_count, res)
     );
+
+  cvReleaseMat( &results );
   
   return 0;
 }

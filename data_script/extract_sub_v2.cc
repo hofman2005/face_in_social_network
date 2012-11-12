@@ -178,7 +178,7 @@ void ExtractSubGraph(const string input,
   // Choose different method to generate the graph.
   // method_2 is for generating graph with given number of nodes.
   // method_3 is for generating graph for show.
-  ExtractMethod_2(graph, output, id_num, id_start);
+  ExtractMethod_3(graph, output, id_num, id_start);
 }
 
 int main(int argc, char ** argv) {

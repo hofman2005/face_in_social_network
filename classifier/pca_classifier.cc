@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 10 Nov 2012 03:45:12 PM
+# Last-modified: 11 Nov 2012 03:12:03 AM
 #
 # Filename: pca_classifier.cc
 #
@@ -130,7 +130,7 @@ bool PCAClassifier::Identify(cv::Mat& image, std::map<std::string, double>* res)
   return true;
 }
 
-bool PCAClassifier::Identify(cv::Mat& image, PhotoResult* res) {
+bool PCAClassifier::Identify(const cv::Mat& image, PhotoResult* res) {
   cv::Size size = image.size();
   cv::Mat temp = image.reshape(1, 1);
   cv::Mat test_data(1, size.width * size.height, CV_32FC1);
@@ -147,12 +147,17 @@ bool PCAClassifier::Identify(cv::Mat& image, PhotoResult* res) {
   //kernel_.Identify(feature, &raw_res);
   kernel2_.predict(feature, &raw_res);
 
-  std::map<int, double>::iterator it;
-  for (it=raw_res.begin(); it!=raw_res.end(); ++it) {
+  // std::map<int, double>::const_iterator it;
+  for (std::map<int, double>::const_iterator it=raw_res.begin();
+       it!=raw_res.end(); 
+       ++it) {
+    // std::cout << it->first << " " << it->second << std::endl;
     //(*res)[id_table_reverse_[static_cast<int>(it->first)]] = it->second;
-    const std::string& id = id_table_reverse_[static_cast<int>(it->first)];
-    double& score = it->second;
-    res->AddRecord(id, 1.0/score);
+    // const std::string& id = id_table_reverse_[static_cast<int>(it->first)];
+    // const std::string& id = id_table_reverse_[it->first];
+    const std::string& id = id_table_reverse_.find(it->first)->second;
+    double score = it->second;
+    res->AddRecord(id, score);
   }
 
   // FOR DEBUG

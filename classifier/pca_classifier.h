@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 30 Apr 2012 01:43:07 PM
+# Last-modified: 10 Nov 2012 09:46:14 PM
 #
 # Filename: pca_classifier.h
 #
@@ -29,7 +29,7 @@ class PCAClassifier : public BaseClassifier {
    int TrainWithUpdatedLabels(const ImageList& image_list);
    bool Identify(cv::Mat& image, std::string *id);
    bool Identify(cv::Mat& image, std::map<std::string, double>* res);
-   bool Identify(cv::Mat& image, PhotoResult* res);
+   bool Identify(const cv::Mat& image, PhotoResult* res);
 //   bool Verify() {};
 // 
 //   int Load() {};

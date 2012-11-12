@@ -1,6 +1,7 @@
 #!/bin/sh
 
-source_dot_file=/home/taowu/work/sn/data/graph20.dot
+#source_dot_file=/home/taowu/work/sn/data/graph20.dot
+source_dot_file=/tmp/test_20121110.dot
 for alb_file in `ls /tmp/sn_*.alb | sort`;
 do
   dot_file=`echo ${alb_file} | sed "s/alb/dot/"`

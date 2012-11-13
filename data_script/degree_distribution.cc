@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 08 Nov 2012 05:57:46 PM
+# Last-modified: 12 Nov 2012 11:42:38 PM
 #
 # Filename: degree_distribution.cc
 #
@@ -61,7 +61,7 @@ int main(int argc, char ** argv) {
     if (max < num)
       max = num;
     if (num >= hist.size()) {
-      hist.resize(num);
+      hist.resize(num+1);
     }
     ++hist[num];
   }

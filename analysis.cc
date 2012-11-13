@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 12 Nov 2012 02:03:36 AM
+# Last-modified: 12 Nov 2012 11:46:09 PM
 #
 # Filename: analysis.cc
 #
@@ -62,16 +62,17 @@ int main(int argc, char **argv) {
 
   sn::SocialGraph false_alarm_graph = graph;
 
-  float total_count = 0;
-  float total_correct_count = 0;
+  float total_count = 0.0;
+  float total_correct_count = 0.0;
   
+  std::vector< std::vector<float> > hist;
   for (; ver_it != ver_it_end; ++ver_it) {
     std::string &id = graph[*ver_it].person_id;
     sn::Album &album = album_map[id];
     // Compute the accuracy for a node
-    int count = 0;
-    int correct_count = 0;
-    int wrong_count = 0;
+    float count = 0.0;
+    float correct_count = 0.0;
+    float wrong_count = 0.0;
     for (sn::Album::const_iterator it=album.begin();
          it!=album.end();
          ++it) {
@@ -110,8 +111,18 @@ int main(int argc, char **argv) {
       // std::cout << "Accuracy " << correct_count << " of " << count 
       //   << " False alarm " << wrong_count << std::endl;
 
+      // Overall accuracy
       total_count += count;
       total_correct_count += correct_count;
+
+      // Distrubition of accuracy on degree
+      sn::AdjacencyIterator friends_it, friends_it_end;
+      boost::tie(friends_it, friends_it_end) = boost::adjacent_vertices(*ver_it, graph);
+      int num = std::distance(friends_it, friends_it_end);
+      if (num >= hist.size())
+        hist.resize(num+1);
+      hist[num].push_back(correct_count / count);
+
     }
   }
 
@@ -127,6 +138,24 @@ int main(int argc, char **argv) {
   // Save the album
   // std::string output_album_file = output_prefix + ".alb";
   // sn::WriteAlbumMapToFile(album_map, output_album_file);
+  
+  // Save the dist
+  std::string output_dist_filename = output_prefix + "_accuracy_dist.dat";
+  std::ofstream output_dist_file(output_dist_filename.c_str());
+  for (int i=0; i<hist.size(); ++i) {
+    float mean=0.0, stdev=0.0;
+    for (std::vector<float>::const_iterator it = hist[i].begin();
+        it != hist[i].end();
+        ++it) {
+      mean += *it;
+      stdev += (*it)*(*it);
+    }
+    mean = mean / hist[i].size();
+    stdev = stdev / hist[i].size() - mean*mean;
+    stdev = sqrt(stdev);
+    if (hist[i].size()>0)
+      output_dist_file << i << " " << mean << " " << stdev << std::endl;
+  }
 
   return 0;
 }

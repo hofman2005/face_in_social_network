@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 10 Nov 2012 09:54:43 AM
+# Last-modified: 13 Nov 2012 12:16:02 AM
 #
 # Filename: album_generator.cc
 #
@@ -28,6 +28,7 @@ int main(int argc, char ** argv) {
   std::string output_prefix;
   int factor = 10000;
   int dist_thres = 4e5;
+  double label_percent = 0.3;
 
   po::options_description options("command line options");
   options.add_options() 
@@ -38,10 +39,12 @@ int main(int argc, char ** argv) {
      "Graph file.")
     ("out-prefix,o", boost::program_options::value<std::string>(&output_prefix), 
      "Output file prefix. Extension .dot and .alb will be appended.")
-    ("factor", boost::program_options::value<int>(&factor)->default_value(10000),
-     "The factor parameter will multiplied with a random number in [0,1].")
-    ("dist-thres", boost::program_options::value<int>(&dist_thres)->default_value(4e5),
-     "The threshold of the distance between a pair of friends.")
+    // ("factor", boost::program_options::value<int>(&factor)->default_value(10000),
+    //  "The factor parameter will multiplied with a random number in [0,1].")
+    // ("dist-thres", boost::program_options::value<int>(&dist_thres)->default_value(4e5),
+    //  "The threshold of the distance between a pair of friends.")
+    ("label-percent,l", boost::program_options::value<double>(&label_percent),
+     "The percentage of initial labeled images, default 0.3.")
   ;
 
   po::variables_map vmap;
@@ -102,7 +105,7 @@ int main(int argc, char ** argv) {
   generator.AssignID(image_map, &graph);
 
   // Generate labels
-  const double label_percent = 0.3;
+  // const double label_percent = 0.3;
   generator.LabelGenerator2(&image_map, label_percent);
 
   // Generate the albums

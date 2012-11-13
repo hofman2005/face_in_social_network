@@ -97,7 +97,7 @@ void ExtractMethod_2(map< int, vector<int> >& graph,
   // Write the extracted graph
   ofstream out(output.c_str());
   out << "graph G {" << endl;
-  out << "node [shape=point color=red];" << endl;
+  out << "# node [shape=point color=red];" << endl;
   visit_queue.clear();
   visit_queue.insert(visit_queue.end()-1, id_start);
   set<int> has_edge, visited_2;
@@ -135,7 +135,7 @@ void ExtractMethod_3(map< int, vector<int> >& graph,
   set<int> has_edge;
   ofstream out(output.c_str());
   out << "graph G {" << endl;
-  out << "node [shape=point color=red];" << endl;
+  out << "# node [shape=point color=red];" << endl;
   while (count < id_num && visit_queue.size() > 0) {
     int current = visit_queue.front();
     visit_queue.pop_front();
@@ -178,7 +178,7 @@ void ExtractSubGraph(const string input,
   // Choose different method to generate the graph.
   // method_2 is for generating graph with given number of nodes.
   // method_3 is for generating graph for show.
-  ExtractMethod_3(graph, output, id_num, id_start);
+  ExtractMethod_2(graph, output, id_num, id_start);
 }
 
 int main(int argc, char ** argv) {

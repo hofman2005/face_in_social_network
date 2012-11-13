@@ -1,5 +1,6 @@
 #include "classifier/bayes_classifier.h"
 #include "classifier/precomp.hpp"
+#include <fstream>
 
 namespace FaceRecognition {
 using namespace cv;
@@ -217,6 +218,16 @@ bool InnerBayesClassifier::train( const CvMat* _train_data, const CvMat* _respon
         }
 
         CV_CALL( cvCompleteSymm( cov, 1 ));
+      // std::cout << "cov row: " << cov->rows << " col: " << cov->cols << std::endl;
+      // std::ofstream cov_file("/tmp/cov.dat");
+      // cov_file.write(reinterpret_cast<char*>(cov->data.db), cov->rows * cov->cols * sizeof(double));
+      // cov_file.close();
+      // for (int t = 0; t < cov->rows * cov->cols; ++t) {
+      //   cov_file << 
+      // }
+      for (int t = 0; t < cov->rows; ++t) {
+        *(cov->data.db + t * cov->rows + t) += 0.1;
+      }
         CV_CALL( cvSVD( cov, w, cov_rotate_mats[cls], 0, CV_SVD_U_T ));
         CV_CALL( cvMaxS( w, min_variation, w ));
         for( j = 0; j < _var_count; j++ )

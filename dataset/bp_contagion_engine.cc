@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 11 Nov 2012 10:51:02 PM
+# Last-modified: 13 Nov 2012 01:14:01 PM
 #
 # Filename: bp_contagion_engine.cc
 #
@@ -129,7 +129,7 @@ bool BeliefPropagationContagionEngine<Classifier>::MakeDecisionOnSingleVertex (A
       ++it) {
     FaceRecognition::PhotoResult& res = it->GetPhotoRes();
     std::string res_id = "-";
-    const double threshold = 3.0f;
+    const double threshold = 4.0f;
     if (res.GetNumRecord() > 1) {
       std::string id_0, id_1;
       double score_0, score_1;
@@ -238,7 +238,11 @@ int BeliefPropagationContagionEngine<Classifier>::PropagateOnSingleVertex
   float correct_count = 0;
   float decision_count = 0;
   int num_label_changed = 0;
+  int it_count = 0;
   for (Album::iterator it = album.begin(); it != album.end(); ++it) {
+    ++it_count;
+    std::cout << it_count << " of " << album.size() << "\r";
+
     id = it->GetAssignedId();
 
     // Do not change those initial labels
@@ -280,6 +284,7 @@ int BeliefPropagationContagionEngine<Classifier>::PropagateOnSingleVertex
 
     // if (res_id != id) ++num_label_changed;
   }
+  std::cout << std::endl;
   // std::cout << " Accuracy: " << correct_count/decision_count*100 << "%" << std::endl;
   // std::cout << " Decision made on " << decision_count << " of " << count << std::endl;
 

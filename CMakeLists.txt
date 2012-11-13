@@ -1,7 +1,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 10 Nov 2012 09:48:13 AM
+# Last-modified: 13 Nov 2012 02:11:21 PM
 #
 # Filename: CMakeLists.txt
 #
@@ -14,7 +14,7 @@ SET(Social_Network_VERSION_MAJOR 1)
 SET(Social_Network_VERSION_MINOR 0)
 
 # Enable OpenMP
-SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -pthread -fopenmp -O2")
+SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -pthread -fopenmp -O3")
 SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -pthread -fopenmp")
 
 # Disable deprecated parts of boost

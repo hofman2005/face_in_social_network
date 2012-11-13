@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 13 Nov 2012 01:14:01 PM
+# Last-modified: 13 Nov 2012 02:10:55 PM
 #
 # Filename: bp_contagion_engine.cc
 #
@@ -239,22 +239,30 @@ int BeliefPropagationContagionEngine<Classifier>::PropagateOnSingleVertex
   float decision_count = 0;
   int num_label_changed = 0;
   int it_count = 0;
-  for (Album::iterator it = album.begin(); it != album.end(); ++it) {
-    ++it_count;
-    std::cout << it_count << " of " << album.size() << "\r";
+  // for (Album::iterator it = album.begin(); it != album.end(); ++it) {
+  int it;
+  cv::Mat image;
+#pragma omp parallel for private(it, id, assigned_by, image)
+  for (it = 0; it < album.size(); ++it) {
+    // ++it_count;
+    // std::cout << it_count << " of " << album.size() << "\r";
 
-    id = it->GetAssignedId();
+    // id = it->GetAssignedId();
+    id = album[it].GetAssignedId();
 
     // Do not change those initial labels
-    assigned_by = it->GetAssignedBy();
+    // assigned_by = it->GetAssignedBy();
+    assigned_by = album[it].GetAssignedBy();
     // if (assigned_by == "God") continue;
     if (assigned_by != "-") continue;
 
     // Load the image
-    cv::Mat image  = it->GetImage(image_prefix_);
+    // cv::Mat image  = it->GetImage(image_prefix_);
+    image = album[it].GetImage(image_prefix_);
 
     // Identify
-    FaceRecognition::PhotoResult& res = it->GetPhotoRes();
+    // FaceRecognition::PhotoResult& res = it->GetPhotoRes();
+    FaceRecognition::PhotoResult& res = album[it].GetPhotoRes();
     pclassifier->Identify(image, &res); 
 
     // // Make a decision.

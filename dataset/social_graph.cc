@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 09 Nov 2012 04:09:11 PM
+# Last-modified: 13 Nov 2012 02:53:19 PM
 #
 # Filename: social_graph.cc
 #
@@ -101,11 +101,13 @@ void ReadAlbumMapFromFile(const std::string &input_file,
       //in >> file >> assigned_id >> assigned_by;
       //Photo *photo = new Photo(content, file, assigned_id, assigned_by);
       in.putback(first);
-      Photo *photo = new Photo;
+      //Photo *photo = new Photo;
+      Photo photo;
       getline(in, content);
       std::istringstream iss_content(content);
-      if(photo->ReadFromStream(iss_content) == 0) {
-        (*album)[current_id].push_back(*photo);
+      if(photo.ReadFromStream(iss_content) == 0) {
+        //(*album)[current_id].push_back(*photo);
+        (*album)[current_id].push_back(photo);
       }
     }
   }

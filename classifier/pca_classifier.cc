@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 11 Nov 2012 03:12:03 AM
+# Last-modified: 13 Nov 2012 05:36:30 PM
 #
 # Filename: pca_classifier.cc
 #
@@ -62,6 +62,12 @@ int PCAClassifier::TrainWithUpdatedLabels(const ImageList &image_list) {
     useful_index.push_back(i);
   }
 
+  // SINGLE class bug
+  if (id_table_.size() < 2) {
+    std::cout << "Only one class is labeled." << std::endl;
+    return 0;
+  }
+
   cv::Mat feature(0,0,CV_32FC1), labels(0,0,CV_32FC1);
   for (int i=0; i<useful_index.size(); ++i) {
     feature.push_back(feature_->row(useful_index[i]));
@@ -75,6 +81,9 @@ int PCAClassifier::TrainWithUpdatedLabels(const ImageList &image_list) {
 }
 
 bool PCAClassifier::Identify(cv::Mat &image, std::string *id) {
+  if (id_table_.size() < 2) {
+    return false;
+  }
   // FOR TEST ONLY
   // *id = "+";
   // return true;
@@ -100,6 +109,9 @@ bool PCAClassifier::Identify(cv::Mat &image, std::string *id) {
 }
 
 bool PCAClassifier::Identify(cv::Mat& image, std::map<std::string, double>* res) {
+  if (id_table_.size() < 2) {
+    return false;
+  }
   cv::Size size = image.size();
   cv::Mat temp = image.reshape(1, 1);
   cv::Mat test_data(1, size.width * size.height, CV_32FC1);
@@ -131,6 +143,9 @@ bool PCAClassifier::Identify(cv::Mat& image, std::map<std::string, double>* res)
 }
 
 bool PCAClassifier::Identify(const cv::Mat& image, PhotoResult* res) {
+  if (id_table_.size() < 2) {
+    return false;
+  }
   cv::Size size = image.size();
   cv::Mat temp = image.reshape(1, 1);
   cv::Mat test_data(1, size.width * size.height, CV_32FC1);

@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 13 Nov 2012 02:10:55 PM
+# Last-modified: 13 Nov 2012 05:12:34 PM
 #
 # Filename: bp_contagion_engine.cc
 #
@@ -64,7 +64,7 @@ int BeliefPropagationContagionEngine<Classifier>::Run() {
   }
 
   // Main loop
-  const int MAX_ITER = 10;
+  const int MAX_ITER = 2;
   int iter = 0;
   while (iter < MAX_ITER) {
     AlbumMap album_copy = *album_map_;
@@ -226,11 +226,12 @@ int BeliefPropagationContagionEngine<Classifier>::PropagateOnSingleVertex
   // if ((*graph_)[base].person_id    == "Infection_Source") return 0;
   // if ((*graph_)[current].person_id == "Infection_Source") return 0;
   
-  std::cout << "Propagate to " << (*graph_)[current].person_id << std::endl;
-
   FaceRecognition::BaseClassifier* pclassifier = classifiers_[base]; 
 
   Album &album = (*album_map)[(*graph_)[current].person_id]; 
+  std::cout << "Propagate to " << (*graph_)[current].person_id
+  << " Album size: " << album.size() << std::endl;
+
   std::string id;
   std::string assigned_by;
 
@@ -292,7 +293,7 @@ int BeliefPropagationContagionEngine<Classifier>::PropagateOnSingleVertex
 
     // if (res_id != id) ++num_label_changed;
   }
-  std::cout << std::endl;
+  // std::cout << std::endl;
   // std::cout << " Accuracy: " << correct_count/decision_count*100 << "%" << std::endl;
   // std::cout << " Decision made on " << decision_count << " of " << count << std::endl;
 

@@ -15,6 +15,13 @@ int PhotoResult::AddRecord(const std::string& id, const double score) {
     cache_dirty_ = true;
   }
 
+  // Keep the size down
+  if (score_map_.size() > 20) {
+    sort_score();
+    score_map_.clear();
+    score_map_.insert(cache_sorted_score_.begin(), cache_sorted_score_.begin()+20);
+  }
+
   // score_map_[id] += score;
   // cache_dirty_ = true;
   

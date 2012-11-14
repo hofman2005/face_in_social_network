@@ -226,7 +226,7 @@ bool InnerBayesClassifier::train( const CvMat* _train_data, const CvMat* _respon
       //   cov_file << 
       // }
       for (int t = 0; t < cov->rows; ++t) {
-        *(cov->data.db + t * cov->rows + t) += 0.1;
+        *(cov->data.db + t * cov->rows + t) += 1;
       }
         CV_CALL( cvSVD( cov, w, cov_rotate_mats[cls], 0, CV_SVD_U_T ));
         CV_CALL( cvMaxS( w, min_variation, w ));

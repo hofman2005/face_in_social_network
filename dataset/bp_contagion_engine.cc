@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 13 Nov 2012 05:12:34 PM
+# Last-modified: 14 Nov 2012 07:10:48 AM
 #
 # Filename: bp_contagion_engine.cc
 #
@@ -64,11 +64,11 @@ int BeliefPropagationContagionEngine<Classifier>::Run() {
   }
 
   // Main loop
-  const int MAX_ITER = 2;
+  const int MAX_ITER = 1;
   int iter = 0;
   while (iter < MAX_ITER) {
-    AlbumMap album_copy = *album_map_;
     int subcount = 0;
+    AlbumMap album_copy = *album_map_;
     need_decision_set_.clear();
     while (!visit_queue_1_.empty()) {
       std::cout << "Iter: " << iter
@@ -83,18 +83,28 @@ int BeliefPropagationContagionEngine<Classifier>::Run() {
       // Propagate
       PropagateOnSingleVertex(current, current, &album_copy);
       need_decision_set_.insert(current);
+      Album& album = album_copy[(*graph_)[current].person_id];
+      bool changed = MakeDecisionOnSingleVertex(&album);
       AdjacencyIterator adj, adj_end;
       for (tie(adj, adj_end) = adjacent_vertices(current, *graph_); 
           adj != adj_end;
           ++adj) {
         PropagateOnSingleVertex(current, *adj, &album_copy);
         need_decision_set_.insert(*adj);
+      Album& album = album_copy[(*graph_)[*adj].person_id];
+      bool changed = MakeDecisionOnSingleVertex(&album);
       }
 
       // Save the album
-      char output_album_file[80];
-      sprintf(output_album_file, "/tmp/sn_%5.5d_%5.5d.alb", iter, subcount);
-      WriteAlbumMapToFile(album_copy, output_album_file);
+      //if ((subcount % 30)==0) {
+      //  char output_album_file[80];
+      //  sprintf(output_album_file, "/tmp/sn_%5.5d_%5.5d.alb", iter, subcount);
+      //  WriteAlbumMapToFile(album_copy, output_album_file);
+      //}
+
+      // Release the classifier
+      classifiers_.clear();
+
       ++subcount;
     }
 
@@ -107,9 +117,16 @@ int BeliefPropagationContagionEngine<Classifier>::Run() {
       if (changed)
         visit_queue_2_.push_back(*it);
     }
+    need_decision_set_.clear();
+
+    album_map_->swap(album_copy);
+
+
+    char output_album_file[80];
+    sprintf(output_album_file, "/tmp/sn_%5.5d_stage.alb", iter);
+    WriteAlbumMapToFile(*album_map_, output_album_file);
 
     visit_queue_1_.swap(visit_queue_2_);
-    album_map_->swap(album_copy);
     ++iter;
 
     std::cout << "Number of points need to be visited in new iteration: " << visit_queue_1_.size() << std::endl;
@@ -127,6 +144,8 @@ bool BeliefPropagationContagionEngine<Classifier>::MakeDecisionOnSingleVertex (A
   for (Album::iterator it = album->begin();
       it != album->end();
       ++it) {
+    if (it->GetAssignedBy() != "-")
+      continue;
     FaceRecognition::PhotoResult& res = it->GetPhotoRes();
     std::string res_id = "-";
     const double threshold = 4.0f;

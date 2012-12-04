@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 13 Nov 2012 05:36:30 PM
+# Last-modified: 04 Dec 2012 04:45:36 PM
 #
 # Filename: pca_classifier.cc
 #
@@ -68,7 +68,7 @@ int PCAClassifier::TrainWithUpdatedLabels(const ImageList &image_list) {
     return 0;
   }
 
-  cv::Mat feature(0,0,CV_32FC1), labels(0,0,CV_32FC1);
+  cv::Mat feature(0,feature_->cols,CV_32FC1), labels(0,1,CV_32SC1);
   for (int i=0; i<useful_index.size(); ++i) {
     feature.push_back(feature_->row(useful_index[i]));
     labels.push_back(train_label.at<int>(useful_index[i]));

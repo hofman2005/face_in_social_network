@@ -1,7 +1,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 14 Nov 2012 12:06:36 AM
+# Last-modified: 04 Dec 2012 03:50:49 PM
 #
 # Filename: CMakeLists.txt
 #
@@ -12,6 +12,8 @@ PROJECT(Social_Network)
 
 SET(Social_Network_VERSION_MAJOR 1)
 SET(Social_Network_VERSION_MINOR 0)
+
+INCLUDE(../CMakeLists.local)
 
 # Enable OpenMP
 SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -pthread -fopenmp -O3")

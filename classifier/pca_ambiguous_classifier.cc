@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 10 Dec 2012 05:37:51 PM
+# Last-modified: 11 Dec 2012 01:06:27 AM
 #
 # Filename: pca_ambiguous_classifier.cc
 #
@@ -49,7 +49,8 @@ int PCAAmbiguousClassifier::Train(const AmbiguousImageList& image_list) {
   }
 
   // Convert labels
-  cv::Mat score_table(num, max_id, CV_64FC1);
+  // cv::Mat score_table(num, max_id, CV_64FC1);
+  cv::Mat score_table = cv::Mat::zeros(num, max_id, CV_64FC1);
   for (int i=0; i<num; ++i) {
     for (int j=0; j<image_list[i].second.GetNumRecord(); ++j) {
       image_list[i].second.GetSortedDecision(j,
@@ -67,7 +68,44 @@ int PCAAmbiguousClassifier::Train(const AmbiguousImageList& image_list) {
 
 bool PCAAmbiguousClassifier::Identify(const cv::Mat& image,
     PhotoResult* res) {
-  return false;
+  if (id_table_.size() < 2) {
+    return false;
+  }
+  cv::Size size = image.size();
+  cv::Mat temp = image.reshape(1, 1);
+  cv::Mat test_data(1, size.width * size.height, CV_64FC1);
+  temp.convertTo(test_data, CV_32FC1);
+  //test_data.row(0) = image.reshape(size.width*size.height);
+  //image.convertTo(test_data.row(0), CV_64FC1, 1, 0);
+  //image.convertTo(temp, CV_64FC1, 1, 0);
+
+  //cv::Mat feature = pca_.project(test_data);
+  cv::Mat feature = test_data;
+
+  std::map<int, double> raw_res; 
+  //kernel_.Identify(feature, &raw_res);
+  kernel_.predict(feature, &raw_res);
+
+  // std::map<int, double>::const_iterator it;
+  for (std::map<int, double>::const_iterator it=raw_res.begin();
+       it!=raw_res.end(); 
+       ++it) {
+    // std::cout << it->first << " " << it->second << std::endl;
+    //(*res)[id_table_reverse_[static_cast<int>(it->first)]] = it->second;
+    // const std::string& id = id_table_reverse_[static_cast<int>(it->first)];
+    // const std::string& id = id_table_reverse_[it->first];
+    const std::string& id = id_table_reverse_.find(it->first)->second;
+    double score = it->second;
+    res->AddRecord(id, score);
+  }
+
+  // FOR DEBUG
+  // std::map<std::string, double>::iterator it2;
+  // std::cout << "Result:" << std::endl;
+  // for (it2=res->begin(); it2!=res->end(); ++it2) {
+  //   std::cout << it2->first << " " << it2->second << std::endl;
+  // }
+  return true;
 }
 
 }

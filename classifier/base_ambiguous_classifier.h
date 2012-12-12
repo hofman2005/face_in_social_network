@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 10 Dec 2012 04:04:04 PM
+# Last-modified: 12 Dec 2012 11:20:02 AM
 #
 # Filename: base_ambiguous_classifier.h
 #
@@ -17,7 +17,7 @@
 
 namespace FaceRecognition {
 
-typedef std::vector< std::pair<cv::Mat*, PhotoResult&> > AmbiguousImageList;
+typedef std::vector< std::pair<cv::Mat*, PhotoResult*> > AmbiguousImageList;
 
 class BaseAmbiguousClassifier {
   public:

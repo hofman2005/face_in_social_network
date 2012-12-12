@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 11 Dec 2012 01:06:27 AM
+# Last-modified: 12 Dec 2012 11:21:50 AM
 #
 # Filename: pca_ambiguous_classifier.cc
 #
@@ -37,8 +37,8 @@ int PCAAmbiguousClassifier::Train(const AmbiguousImageList& image_list) {
   double score;
   int max_id = id_table_.size();
   for (int i=0; i<num; ++i) {
-    for (int j=0; j<image_list[i].second.GetNumRecord(); ++j) {
-      image_list[i].second.GetSortedDecision(j, 
+    for (int j=0; j<image_list[i].second->GetNumRecord(); ++j) {
+      image_list[i].second->GetSortedDecision(j, 
           &score, &ori_id);
       if (id_table_.count(ori_id)==0) {
         id_table_[ori_id] = max_id;
@@ -52,8 +52,8 @@ int PCAAmbiguousClassifier::Train(const AmbiguousImageList& image_list) {
   // cv::Mat score_table(num, max_id, CV_64FC1);
   cv::Mat score_table = cv::Mat::zeros(num, max_id, CV_64FC1);
   for (int i=0; i<num; ++i) {
-    for (int j=0; j<image_list[i].second.GetNumRecord(); ++j) {
-      image_list[i].second.GetSortedDecision(j,
+    for (int j=0; j<image_list[i].second->GetNumRecord(); ++j) {
+      image_list[i].second->GetSortedDecision(j,
           &score, &ori_id);
       score_table.at<double>(i, id_table_[ori_id]) = score;
     }

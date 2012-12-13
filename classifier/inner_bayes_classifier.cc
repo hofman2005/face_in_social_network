@@ -338,7 +338,7 @@ struct predict_body {
             /* probability = exp( -0.5 * cur ) */
 
             if (res_ != NULL) {
-              (*res_)[cls_labels->data.i[i]] = cur;
+              (*res_)[cls_labels->data.i[i]] = -cur;
               //std::cout << i << " " << cur << std::endl;
             }
         }

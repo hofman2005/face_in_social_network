@@ -27,6 +27,14 @@ int PhotoResult::AddRecord(const std::string& id, const double score, MergeType 
     sort_score();
     score_map_.clear();
     score_map_.insert(cache_sorted_score_.begin(), cache_sorted_score_.begin()+20);
+
+    std::map<std::string, int> score_count_new;
+    for (std::map<std::string, double>::const_iterator it = score_map_.begin();
+        it != score_map_.end();
+        ++it) {
+      score_count_new[it->first] = score_count_[it->first];
+    }
+    score_count_.swap(score_count_new);
   }
 
   // score_map_[id] += score;

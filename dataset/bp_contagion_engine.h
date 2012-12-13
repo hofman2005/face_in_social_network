@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 10 Nov 2012 03:28:19 PM
+# Last-modified: 13 Dec 2012 10:58:37 AM
 #
 # Filename: bp_contagion_engine.h
 #
@@ -27,8 +27,9 @@ class BeliefPropagationContagionEngine : public BaseContagionEngine {
       : BaseContagionEngine(image_prefix, graph, album_map) {};
     virtual ~BeliefPropagationContagionEngine();
 
-    int Init();
-    int Run();
+    virtual int Init();
+    virtual int Run();
+    virtual int FirstRun();
 
   private:
     int AppendTrainingImageList(Vertex current,
@@ -40,7 +41,13 @@ class BeliefPropagationContagionEngine : public BaseContagionEngine {
     bool MakeDecisionOnSingleVertex(Album* album);
     int ReleaseAllClassifiers();
 
+    int PrepareRansacTrainingImageList(Vertex current,
+        FaceRecognition::ImageList * image_list,
+        double select_ratio);
+    int RansacOnSingleVertex(Vertex current);
+
     std::vector<FaceRecognition::BaseClassifier*> classifiers_;
+    FaceRecognition::BaseClassifier* classifier_;
 
     std::deque<Vertex> visit_queue_1_, visit_queue_2_;
     std::set<Vertex> need_decision_set_;

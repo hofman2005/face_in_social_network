@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 13 Dec 2012 02:52:01 AM
+# Last-modified: 13 Dec 2012 10:55:38 AM
 #
 # Filename: bp_ambiguous_contagion_engine.cc
 #
@@ -31,6 +31,10 @@ int BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::FirstRun() {
     // Use Ransac to generate the initial labels and weights.
     RansacOnSingleVertex(*vi);
   }
+
+  char output_album_file[80];
+  sprintf(output_album_file, "/tmp/sn_init_stage.alb");
+  WriteAlbumMapToFile(*album_map_, output_album_file);
 
   return 0;
 }
@@ -312,10 +316,6 @@ int BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::RansacOnSing
   // // Test the accuracy of ransac result
   // Album album_copy_2 = (*album_map_)[(*graph_)[current].person_id];
   // MakeDecisionOnSingleVertex(&album_copy_2);
-
-  char output_album_file[80];
-  sprintf(output_album_file, "/tmp/sn_init_stage.alb");
-  WriteAlbumMapToFile(*album_map_, output_album_file);
 
   return 0;
 }

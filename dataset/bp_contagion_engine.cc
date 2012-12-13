@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 14 Nov 2012 07:10:48 AM
+# Last-modified: 13 Dec 2012 10:59:07 AM
 #
 # Filename: bp_contagion_engine.cc
 #
@@ -322,6 +322,104 @@ int BeliefPropagationContagionEngine<Classifier>::PropagateOnSingleVertex
   // WriteAlbumMapToFile(*album_map, output_album_file);
 
   // return num_label_changed;
+  return 0;
+}
+
+template <class Classifier>
+int BeliefPropagationContagionEngine<Classifier>::
+PrepareRansacTrainingImageList(Vertex current,
+                               FaceRecognition::ImageList * image_list,
+                               double select_ratio) {
+  Album& album = (*album_map_)[(*graph_)[current].person_id];
+  const int mod = 1000;
+  std::string id;
+  for (Album::iterator it = album.begin(); it != album.end(); ++it) {
+    double r = rand() % mod;
+    r = r / mod;
+    id = it->GetAssignedId();
+
+    if (id != "-" && r < select_ratio) {
+      cv::Mat * image = new cv::Mat;
+      *image = it->GetImage(image_prefix_);
+
+      image_list->push_back( std::make_pair(image, id) );
+    }
+  }
+  return 0;
+}
+
+template <class Classifier>
+int BeliefPropagationContagionEngine<Classifier>::RansacOnSingleVertex (Vertex current) {
+  AlbumMap album_copy = *album_map_;
+
+  const int max_fold = 2;
+  // double select_ratio = 1 - 1. / max_fold;
+  double select_ratio = 0.8;
+  for (int i=0; i<max_fold; ++i) {
+    std::cout << "Ransac training on " << (*graph_)[current].person_id << 
+      " fold " << i << " of " << max_fold << std::endl;
+    if (classifier_)
+      delete classifier_;
+    classifier_ = new Classifier;
+
+    FaceRecognition::ImageList image_list;
+    // Prepare the training samples.
+    PrepareRansacTrainingImageList(current, &image_list, select_ratio);
+
+    // Can do nothing if no training samples.
+    if (image_list.empty())
+      continue;
+
+    // Train
+    int res = classifier_->Train(image_list);
+
+    for (FaceRecognition::ImageList::iterator it = image_list.begin();
+        it!=image_list.end();
+        ++it) {
+      // delete it->first;
+      // delete it->second;
+    }
+
+    if (res < 0)
+      continue;
+
+    // Test
+    FaceRecognition::BaseClassifier* old_classifier = classifiers_[current];
+    classifiers_[current] = classifier_;
+    PropagateOnSingleVertex(current, current, &album_copy);
+    classifiers_[current] = old_classifier;
+    
+    // Release
+    delete classifier_;
+    classifier_ = NULL;
+  }
+
+  album_map_->swap(album_copy);
+
+  // // Test the accuracy of ransac result
+  // Album album_copy_2 = (*album_map_)[(*graph_)[current].person_id];
+  // MakeDecisionOnSingleVertex(&album_copy_2);
+  Album& album = (*album_map_)[(*graph_)[current].person_id];
+  MakeDecisionOnSingleVertex(&album);
+
+  return 0;
+}
+
+// Generate the initial label list and weights.
+template <class Classifier>
+int BeliefPropagationContagionEngine<Classifier>::FirstRun() {
+  VertexIterator vi, vi_end;
+  for (tie(vi, vi_end) = vertices(*graph_);
+      vi != vi_end;
+      ++vi) {
+    // Use Ransac to generate the initial labels and weights.
+    RansacOnSingleVertex(*vi);
+  }
+
+  char output_album_file[80];
+  sprintf(output_album_file, "/tmp/sn_init_stage.alb");
+  WriteAlbumMapToFile(*album_map_, output_album_file);
+
   return 0;
 }
 

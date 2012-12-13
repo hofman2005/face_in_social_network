@@ -8,6 +8,22 @@
 namespace FaceRecognition {
   class InnerBayesAmbiguousClassifier {
     public:
+      InnerBayesAmbiguousClassifier()
+        : nclasses(0),
+        var_count(0),
+        var_all(0),
+        var_idx(NULL),
+        cls_labels(NULL),
+        count(NULL),
+        sum(NULL),
+        productsum(NULL),
+        avg(NULL),
+        inv_eigen_values(NULL),
+        cov_rotate_mats(NULL),
+        c(NULL),
+        default_model_name("inner_ambiguous_bayes")
+    {};
+
       virtual ~InnerBayesAmbiguousClassifier();
 
       virtual bool train(const cv::Mat& train_data,

@@ -32,7 +32,7 @@ class PhotoResult {
   struct IntCmp {
     bool operator()(const std::pair<std::string, double>& lhs, 
                     const std::pair<std::string, double>& rhs) {
-      return lhs.second < rhs.second;
+      return lhs.second > rhs.second;
     };
   };
 };

@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 12 Dec 2012 11:26:54 AM
+# Last-modified: 12 Dec 2012 03:22:31 PM
 #
 # Filename: bp_ambiguous_contagion_engine.h
 #
@@ -30,7 +30,7 @@ class BeliefPropagationAmbiguousContagionEngine : public BaseContagionEngine {
         delete classifier_;
     };
 
-    // virtual int Init() {};
+    virtual int Init();
     virtual int Run();
 
     virtual int FirstRun();
@@ -40,6 +40,10 @@ class BeliefPropagationAmbiguousContagionEngine : public BaseContagionEngine {
                                 FaceRecognition::AmbiguousImageList * image_list,
                                 bool load_image = true);
     int TrainOnSingleVertex(Vertex current);
+    int PrepareRansacTrainingImageList(Vertex current,
+        FaceRecognition::AmbiguousImageList * image_list,
+        double select_ratio);
+    int RansacOnSingleVertex(Vertex current);
     int PropagateOnSingleVertex(const Vertex base, const Vertex current, AlbumMap* album_map);
     bool MakeDecisionOnSingleVertex(Album* album);
 

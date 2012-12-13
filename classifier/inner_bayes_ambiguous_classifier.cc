@@ -35,6 +35,7 @@ bool InnerBayesAmbiguousClassifier::train(const cv::Mat& train_data,
   bool result = false;
 
   clear();
+  std::cout << "Start Kernel Training." << std::endl;
 
   nclasses = score_table.cols;
   var_count = train_data.cols;
@@ -171,8 +172,10 @@ bool InnerBayesAmbiguousClassifier::predict(const cv::Mat& test_data,
   int ival;
   int cls = -1;
   double opt = FLT_MAX;
+  const double SCALE = 100000.0;
   // CvMat diff = cvMat( 1, var_count, CV_64FC1, &buffer[0] );
-  CvMat diff = cvMat( 1, var_count, CV_64FC1 );
+  // CvMat diff = cvMat( 1, var_count, CV_64FC1 );
+  CvMat * diff = cvCreateMat( 1, var_count, CV_64FC1 );
 
   for(int i = 0; i < nclasses; i++ )
   {
@@ -188,29 +191,35 @@ bool InnerBayesAmbiguousClassifier::predict(const cv::Mat& test_data,
     // cov = u w u'  -->  cov^(-1) = u w^(-1) u'
     for(int j = 0; j < var_count; j++ ) {
       // diff.data.db[j] = avg_data[j] - x[vidx ? vidx[j] : j];
-      diff.data.db[j] = avg_data[j] - x[j];
+      diff->data.db[j] = avg_data[j] - x[j];
     }
 
-    cvGEMM( &diff, u, 1, 0, 0, &diff, CV_GEMM_B_T );
+    cvGEMM( diff, u, 1, 0, 0, diff, CV_GEMM_B_T );
     for(int j = 0; j < var_count; j++ )
     {
-      double d = diff.data.db[j];
+      double d = diff->data.db[j];
       cur += d*d*w->data.db[j];
     }
 
-    if( cur < opt )
-    {
-      cls = i;
-      opt = cur;
-    }
+    cur += c->data.db[i];
+    
+    cur = exp(- cur / SCALE);
+
+    // if( cur < opt )
+    // {
+    //   cls = i;
+    //   opt = cur;
+    // }
     /* probability = exp( -0.5 * cur ) */
 
     if (res != NULL) {
-      (*res)[cls_labels->data.i[i]] = cur;
+      // (*res)[cls_labels->data.i[i]] = cur;
+      (*res)[i] = cur;
       //std::cout << i << " " << cur << std::endl;
     }
   }
 
+  cvReleaseMat( &diff );
 
   return true;
 }

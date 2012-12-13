@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 12 Dec 2012 11:21:50 AM
+# Last-modified: 12 Dec 2012 10:31:17 PM
 #
 # Filename: pca_ambiguous_classifier.cc
 #
@@ -59,11 +59,14 @@ int PCAAmbiguousClassifier::Train(const AmbiguousImageList& image_list) {
     }
   }
 
-  kernel_.train(*train_data, score_table);
-
-  delete train_data;
-
-  return 0;
+  if (score_table.cols < 2) {
+    delete train_data;
+    return -1;
+  } else {
+    kernel_.train(*train_data, score_table);
+    delete train_data;
+    return 0;
+  }
 }
 
 bool PCAAmbiguousClassifier::Identify(const cv::Mat& image,
@@ -74,7 +77,7 @@ bool PCAAmbiguousClassifier::Identify(const cv::Mat& image,
   cv::Size size = image.size();
   cv::Mat temp = image.reshape(1, 1);
   cv::Mat test_data(1, size.width * size.height, CV_64FC1);
-  temp.convertTo(test_data, CV_32FC1);
+  temp.convertTo(test_data, CV_64FC1);
   //test_data.row(0) = image.reshape(size.width*size.height);
   //image.convertTo(test_data.row(0), CV_64FC1, 1, 0);
   //image.convertTo(temp, CV_64FC1, 1, 0);

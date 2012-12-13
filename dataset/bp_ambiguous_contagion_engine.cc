@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 12 Dec 2012 10:29:48 PM
+# Last-modified: 12 Dec 2012 11:16:33 PM
 #
 # Filename: bp_ambiguous_contagion_engine.cc
 #
@@ -269,7 +269,7 @@ int BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::RansacOnSing
   AlbumMap album_copy = *album_map_;
 
   const int max_fold = 3;
-  double select_ratio = 1. / max_fold;
+  double select_ratio = 1 - 1. / max_fold;
   for (int i=0; i<max_fold; ++i) {
     std::cout << "Ransac training on " << (*graph_)[current].person_id << 
       " fold " << i << " of " << max_fold << std::endl;

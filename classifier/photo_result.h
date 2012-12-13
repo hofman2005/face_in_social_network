@@ -10,8 +10,9 @@
 namespace FaceRecognition {
 class PhotoResult {
  public:
+   enum MergeType {TAKE_MAX, TAKE_MEAN};
   PhotoResult() : cache_dirty_(false) {};
-  int AddRecord(const std::string& id, const double score);
+  int AddRecord(const std::string& id, const double score, MergeType merge_type=TAKE_MEAN);
   double GetRecord(const std::string& id) const;
   inline int GetNumRecord() const {return score_map_.size();};
   
@@ -27,6 +28,7 @@ class PhotoResult {
  private:
   int sort_score();
   std::map<std::string, double> score_map_;
+  std::map<std::string, int> score_count_;
   std::vector< std::pair<std::string, double> > cache_sorted_score_;
   bool cache_dirty_;
   struct IntCmp {

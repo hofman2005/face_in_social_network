@@ -3,15 +3,22 @@
 #include <sstream>
 
 namespace FaceRecognition {
-int PhotoResult::AddRecord(const std::string& id, const double score) {
+int PhotoResult::AddRecord(const std::string& id, const double score, MergeType merge_type) {
   // Merge
   if (score_map_.find(id) != score_map_.end()) {
-    if (score > score_map_[id]) {
-      score_map_[id] = score;
-      cache_dirty_ = true;
+    if (merge_type == TAKE_MAX) {
+      if (score > score_map_[id]) {
+        score_map_[id] = score;
+        cache_dirty_ = true;
+      }
+    } else if (merge_type == TAKE_MEAN) {
+      double prev_score = score_map_[id] * score_count_[id];
+      ++ score_count_[id];
+      score_map_[id] = (prev_score + score) / score_count_[id];
     }
   } else {
     score_map_[id] = score;
+    score_count_[id] = 1;
     cache_dirty_ = true;
   }
 

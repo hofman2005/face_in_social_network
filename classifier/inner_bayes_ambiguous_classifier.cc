@@ -79,7 +79,8 @@ bool InnerBayesAmbiguousClassifier::train(const cv::Mat& train_data,
       if (score < 1e-10)
         continue;
 
-      int* count_data = count[cls]->data.i;
+      // int* count_data = count[cls]->data.i;
+      double* count_data = count[cls]->data.db;
       double* sum_data = sum[cls]->data.db;
       double* prod_data = productsum[cls]->data.db;
       const double* train_vec = train_data.ptr<double>(s);
@@ -101,7 +102,8 @@ bool InnerBayesAmbiguousClassifier::train(const cv::Mat& train_data,
     double det = 1;
     // int i, j;
     CvMat* w = inv_eigen_values[cls];
-    int* count_data = count[cls]->data.i;
+    // int* count_data = count[cls]->data.i;
+    double* count_data = count[cls]->data.db;
     double* avg_data = avg[cls]->data.db;
     double* sum1 = sum[cls]->data.db;
 
@@ -177,6 +179,8 @@ bool InnerBayesAmbiguousClassifier::predict(const cv::Mat& test_data,
   // CvMat diff = cvMat( 1, var_count, CV_64FC1 );
   CvMat * diff = cvCreateMat( 1, var_count, CV_64FC1 );
 
+  double total = 0.;
+
   for(int i = 0; i < nclasses; i++ )
   {
 
@@ -204,6 +208,7 @@ bool InnerBayesAmbiguousClassifier::predict(const cv::Mat& test_data,
     cur += c->data.db[i];
     
     cur = exp(- cur / SCALE);
+    total += cur;
 
     // if( cur < opt )
     // {
@@ -216,6 +221,12 @@ bool InnerBayesAmbiguousClassifier::predict(const cv::Mat& test_data,
       // (*res)[cls_labels->data.i[i]] = cur;
       (*res)[i] = cur;
       //std::cout << i << " " << cur << std::endl;
+    }
+  }
+
+  if (res != NULL) {
+    for (int i=0; i<nclasses; ++i) {
+      (*res)[i] /= total;
     }
   }
 

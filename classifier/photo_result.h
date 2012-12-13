@@ -12,7 +12,7 @@ class PhotoResult {
  public:
    enum MergeType {TAKE_MAX, TAKE_MEAN};
   PhotoResult() : cache_dirty_(false) {};
-  int AddRecord(const std::string& id, const double score, MergeType merge_type=TAKE_MEAN);
+  int AddRecord(const std::string& id, const double score, MergeType merge_type=TAKE_MAX);
   double GetRecord(const std::string& id) const;
   inline int GetNumRecord() const {return score_map_.size();};
   

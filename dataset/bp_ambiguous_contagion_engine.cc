@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 12 Dec 2012 11:16:33 PM
+# Last-modified: 13 Dec 2012 02:52:01 AM
 #
 # Filename: bp_ambiguous_contagion_engine.cc
 #
@@ -211,7 +211,7 @@ bool BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::MakeDecisio
     //   continue;
     FaceRecognition::PhotoResult& res = it->GetPhotoRes();
     std::string res_id = "-";
-    const double threshold = 1.2f;
+    const double threshold = 1.5f;
     if (res.GetNumRecord() > 1) {
       std::string id_0, id_1;
       double score_0, score_1;
@@ -268,8 +268,9 @@ template <class AmbiguousClassifier>
 int BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::RansacOnSingleVertex (Vertex current) {
   AlbumMap album_copy = *album_map_;
 
-  const int max_fold = 3;
-  double select_ratio = 1 - 1. / max_fold;
+  const int max_fold = 2;
+  // double select_ratio = 1 - 1. / max_fold;
+  double select_ratio = 0.8;
   for (int i=0; i<max_fold; ++i) {
     std::cout << "Ransac training on " << (*graph_)[current].person_id << 
       " fold " << i << " of " << max_fold << std::endl;
@@ -308,8 +309,12 @@ int BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::RansacOnSing
 
   album_map_->swap(album_copy);
 
+  // // Test the accuracy of ransac result
+  // Album album_copy_2 = (*album_map_)[(*graph_)[current].person_id];
+  // MakeDecisionOnSingleVertex(&album_copy_2);
+
   char output_album_file[80];
-  sprintf(output_album_file, "/tmp/sn_init.alb");
+  sprintf(output_album_file, "/tmp/sn_init_stage.alb");
   WriteAlbumMapToFile(*album_map_, output_album_file);
 
   return 0;

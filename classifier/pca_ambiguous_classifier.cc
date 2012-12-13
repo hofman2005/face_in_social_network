@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 13 Dec 2012 12:49:43 AM
+# Last-modified: 13 Dec 2012 01:48:57 AM
 #
 # Filename: pca_ambiguous_classifier.cc
 #
@@ -52,10 +52,12 @@ int PCAAmbiguousClassifier::Train(const AmbiguousImageList& image_list) {
   // cv::Mat score_table(num, max_id, CV_64FC1);
   cv::Mat score_table = cv::Mat::zeros(num, max_id, CV_64FC1);
   for (int i=0; i<num; ++i) {
-    for (int j=0; j<image_list[i].second->GetNumRecord(); ++j) {
+    int num_record = image_list[i].second->GetNumRecord();
+    for (int j=0; j<num_record; ++j) {
       image_list[i].second->GetSortedDecision(j,
           &score, &ori_id);
-      score_table.at<double>(i, id_table_[ori_id]) = score;
+      if (score >= 1. / num_record)
+        score_table.at<double>(i, id_table_[ori_id]) = score;
     }
   }
 

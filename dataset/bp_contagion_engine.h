@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 13 Dec 2012 10:58:37 AM
+# Last-modified: 11 Jan 2013 02:36:44 PM
 #
 # Filename: bp_contagion_engine.h
 #
@@ -24,7 +24,8 @@ class BeliefPropagationContagionEngine : public BaseContagionEngine {
     BeliefPropagationContagionEngine(const std::string& image_prefix,
                                      SocialGraph* graph,
                                      AlbumMap* album_map)
-      : BaseContagionEngine(image_prefix, graph, album_map) {};
+      : classifier_(NULL), 
+        BaseContagionEngine(image_prefix, graph, album_map){};
     virtual ~BeliefPropagationContagionEngine();
 
     virtual int Init();

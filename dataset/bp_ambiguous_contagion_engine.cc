@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 13 Dec 2012 10:55:38 AM
+# Last-modified: 11 Jan 2013 03:20:07 PM
 #
 # Filename: bp_ambiguous_contagion_engine.cc
 #
@@ -41,7 +41,7 @@ int BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::FirstRun() {
 
 template <class AmbiguousClassifier>
 int BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::Run() {
-  FirstRun();
+  // FirstRun();
 
   visit_queue_1_.clear();
   visit_queue_2_.clear();
@@ -55,7 +55,7 @@ int BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::Run() {
   }
 
   // Main loop
-  const int MAX_ITER = 2;
+  const int MAX_ITER = 1;
   int iter = 0;
   while (iter < MAX_ITER) {
     int subcount = 0;
@@ -314,8 +314,8 @@ int BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::RansacOnSing
   album_map_->swap(album_copy);
 
   // // Test the accuracy of ransac result
-  // Album album_copy_2 = (*album_map_)[(*graph_)[current].person_id];
-  // MakeDecisionOnSingleVertex(&album_copy_2);
+  Album& album = (*album_map_)[(*graph_)[current].person_id];
+  MakeDecisionOnSingleVertex(&album);
 
   return 0;
 }

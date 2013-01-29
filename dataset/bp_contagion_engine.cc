@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 13 Dec 2012 10:59:07 AM
+# Last-modified: 11 Jan 2013 02:54:05 PM
 #
 # Filename: bp_contagion_engine.cc
 #
@@ -144,11 +144,12 @@ bool BeliefPropagationContagionEngine<Classifier>::MakeDecisionOnSingleVertex (A
   for (Album::iterator it = album->begin();
       it != album->end();
       ++it) {
-    if (it->GetAssignedBy() != "-")
+    if (! (it->GetAssignedBy() == "-" ||
+           it->GetAssignedBy() == "Amb") )
       continue;
     FaceRecognition::PhotoResult& res = it->GetPhotoRes();
     std::string res_id = "-";
-    const double threshold = 4.0f;
+    const double threshold = 2.0f;
     if (res.GetNumRecord() > 1) {
       std::string id_0, id_1;
       double score_0, score_1;
@@ -161,6 +162,8 @@ bool BeliefPropagationContagionEngine<Classifier>::MakeDecisionOnSingleVertex (A
           changed = true;
         }
       }
+      else
+        it->SetAssignedId("-", "-");
     }
 
     // Simple analysis
@@ -274,7 +277,9 @@ int BeliefPropagationContagionEngine<Classifier>::PropagateOnSingleVertex
     // assigned_by = it->GetAssignedBy();
     assigned_by = album[it].GetAssignedBy();
     // if (assigned_by == "God") continue;
-    if (assigned_by != "-") continue;
+    // if (assigned_by != "-") continue;
+    if ( ! (assigned_by == "Amb" || 
+            assigned_by == "-") ) continue;
 
     // Load the image
     // cv::Mat image  = it->GetImage(image_prefix_);
@@ -352,9 +357,9 @@ template <class Classifier>
 int BeliefPropagationContagionEngine<Classifier>::RansacOnSingleVertex (Vertex current) {
   AlbumMap album_copy = *album_map_;
 
-  const int max_fold = 2;
+  const int max_fold = 5;
   // double select_ratio = 1 - 1. / max_fold;
-  double select_ratio = 0.8;
+  double select_ratio = 0.4;
   for (int i=0; i<max_fold; ++i) {
     std::cout << "Ransac training on " << (*graph_)[current].person_id << 
       " fold " << i << " of " << max_fold << std::endl;

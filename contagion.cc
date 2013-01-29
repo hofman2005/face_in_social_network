@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 13 Dec 2012 11:00:12 AM
+# Last-modified: 11 Jan 2013 03:04:41 PM
 #
 # Filename: contagion.cc
 #
@@ -96,11 +96,12 @@ int main(int argc, char **argv) {
   // Self defind visit engine.
 //  sn::BaseContagionEngine * contagion_engine = new sn::BfsCrossContagionEngine<fn::PCAClassifier>(image_prefix, &graph, &album_map);
 //  sn::BaseContagionEngine * contagion_engine = new sn::ParallelCrossContagionEngine<fn::PCAClassifier>(image_prefix, &graph, &album_map);
-  sn::BaseContagionEngine * contagion_engine = new sn::BeliefPropagationContagionEngine<fn::PCAClassifier>(image_prefix, &graph, &album_map);
+  // sn::BaseContagionEngine * contagion_engine = new sn::BeliefPropagationContagionEngine<fn::PCAClassifier>(image_prefix, &graph, &album_map);
   // Self correct (Exp 2)
-  // sn::BaseContagionEngine * contagion_engine = new sn::BeliefPropagationAmbiguousContagionEngine<fn::PCAAmbiguousClassifier>(image_prefix, &graph, &album_map);
+  sn::BaseContagionEngine * contagion_engine = new sn::BeliefPropagationAmbiguousContagionEngine<fn::PCAAmbiguousClassifier>(image_prefix, &graph, &album_map);
   //contagion_engine->Init("Infection_Source");
   contagion_engine->Init();
+  contagion_engine->FirstRun();
   contagion_engine->Run();
   delete contagion_engine;
  

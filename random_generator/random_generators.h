@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 13 Nov 2012 04:13:27 PM
+# Last-modified: 13 Dec 2012 02:23:04 PM
 #
 # Filename: random_generators.h
 #
@@ -14,12 +14,15 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <stdlib.h>
+#include <time.h>
+
 #include "dataset/social_graph.h"
 
 namespace SocialNetwork {
 class RandomGenerators {
  public:
-  RandomGenerators() {};
+  RandomGenerators() {srand( time(NULL) );};
   ~RandomGenerators() {};
  
   void EdgeGenerator(const int factor, 
@@ -35,6 +38,7 @@ class RandomGenerators {
                       //const Vertex &start,
                       AlbumMap *album_map); 
   void LabelGenerator2(AlbumMap *image_map, double label_percent);
+  void LabelGenerator_WrongLabels(AlbumMap * image_map, double wrong_label_percent);
  private:
 };
 

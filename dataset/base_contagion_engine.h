@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 16 Apr 2012 10:06:45 AM
+# Last-modified: 13 Dec 2012 02:51:33 PM
 #
 # Filename: base_contagion_engine.h
 #
@@ -25,6 +25,7 @@ class BaseContagionEngine {
   
   virtual int Init() {};
   //virtual int Init(const std::string& start_id) {};
+  virtual int FirstRun() {};
   virtual int Run() {};
 
  protected:

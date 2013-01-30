@@ -1,6 +1,7 @@
 #include "classifier/photo_result.h"
 #include <algorithm>
 #include <sstream>
+#include <fstream>
 
 namespace FaceRecognition {
 int PhotoResult::AddRecord(const std::string& id, const double score, MergeType merge_type) {
@@ -15,6 +16,11 @@ int PhotoResult::AddRecord(const std::string& id, const double score, MergeType 
       double prev_score = score_map_[id] * score_count_[id];
       ++ score_count_[id];
       score_map_[id] = (prev_score + score) / score_count_[id];
+    } else if (merge_type == TAKE_MIN) {
+      if (score_map_.count(id) > 0 && score < score_map_[id]) {
+        score_map_[id] = score;
+        cache_dirty_ = true;
+      }
     }
   } else {
     score_map_[id] = score;
@@ -39,6 +45,7 @@ int PhotoResult::AddRecord(const std::string& id, const double score, MergeType 
 
   // score_map_[id] += score;
   // cache_dirty_ = true;
+  record_.push_back(FullRecord(id, score));
   
   return 0;
 }
@@ -106,6 +113,17 @@ std::ostream& PhotoResult::WriteToStream(std::ostream& out) const {
     out << it->first << " " << it->second << " ";
   }
   out << endl;
+
+  // // DEBUG
+  // out << "DEBUG_BEGIN" << endl;
+  // for (vector<FullRecord>::const_iterator itt = record_.begin(); 
+  //     itt != record_.end();
+  //     ++itt) {
+  //   out << itt->id << " " << itt->score << " ";
+  // }
+  // out << endl;
+  // out << "DEBUG_END" << endl;
+  
   return out;
 }
 }

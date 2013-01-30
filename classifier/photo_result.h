@@ -9,10 +9,19 @@
 
 namespace FaceRecognition {
 class PhotoResult {
+  private:
+    struct FullRecord {
+      double score;
+      std::string id;
+      FullRecord() {};
+      FullRecord(const std::string& _id, const double _score)
+        : score(_score), id(_id) {};
+    };
  public:
-   enum MergeType {TAKE_MAX, TAKE_MEAN};
+  enum MergeType {TAKE_MAX, TAKE_MEAN, TAKE_MIN};
   PhotoResult() : cache_dirty_(false) {};
-  int AddRecord(const std::string& id, const double score, MergeType merge_type=TAKE_MAX);
+  int AddRecord(const std::string& id, const double score, MergeType merge_type=TAKE_MEAN);
+  int AddRecord(const std::string& id, const double score, const std::string& source);
   double GetRecord(const std::string& id) const;
   inline int GetNumRecord() const {return score_map_.size();};
   
@@ -37,6 +46,7 @@ class PhotoResult {
       return lhs.second > rhs.second;
     };
   };
+  std::vector<FullRecord> record_;
 };
 
 inline std::istream& operator>> (std::istream& in, PhotoResult& photo_result) {

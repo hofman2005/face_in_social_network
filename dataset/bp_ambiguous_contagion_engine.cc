@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 11 Jan 2013 03:20:07 PM
+# Last-modified: 30 Jan 2013 04:25:26 PM
 #
 # Filename: bp_ambiguous_contagion_engine.cc
 #
@@ -215,7 +215,7 @@ bool BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::MakeDecisio
     //   continue;
     FaceRecognition::PhotoResult& res = it->GetPhotoRes();
     std::string res_id = "-";
-    const double threshold = 1.5f;
+    const double threshold = 2.0f;
     if (res.GetNumRecord() > 1) {
       std::string id_0, id_1;
       double score_0, score_1;
@@ -272,9 +272,9 @@ template <class AmbiguousClassifier>
 int BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::RansacOnSingleVertex (Vertex current) {
   AlbumMap album_copy = *album_map_;
 
-  const int max_fold = 2;
+  const int max_fold = 3;
   // double select_ratio = 1 - 1. / max_fold;
-  double select_ratio = 0.8;
+  double select_ratio = 0.6;
   for (int i=0; i<max_fold; ++i) {
     std::cout << "Ransac training on " << (*graph_)[current].person_id << 
       " fold " << i << " of " << max_fold << std::endl;

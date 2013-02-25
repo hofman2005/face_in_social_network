@@ -114,15 +114,16 @@ std::ostream& PhotoResult::WriteToStream(std::ostream& out) const {
   }
   out << endl;
 
-  // // DEBUG
-  // out << "DEBUG_BEGIN" << endl;
-  // for (vector<FullRecord>::const_iterator itt = record_.begin(); 
-  //     itt != record_.end();
-  //     ++itt) {
-  //   out << itt->id << " " << itt->score << " ";
-  // }
-  // out << endl;
-  // out << "DEBUG_END" << endl;
+  // DEBUG
+  out << "% DEBUG_BEGIN" << endl;
+  out << "%" ;
+  for (vector<FullRecord>::const_iterator itt = record_.begin(); 
+      itt != record_.end();
+      ++itt) {
+    out << itt->id << " " << itt->score << " ";
+  }
+  out << endl;
+  out << "% DEBUG_END" << endl;
   
   return out;
 }

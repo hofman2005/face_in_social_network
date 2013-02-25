@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 11 Jan 2013 02:54:05 PM
+# Last-modified: 31 Jan 2013 02:40:19 PM
 #
 # Filename: bp_contagion_engine.cc
 #
@@ -64,7 +64,7 @@ int BeliefPropagationContagionEngine<Classifier>::Run() {
   }
 
   // Main loop
-  const int MAX_ITER = 1;
+  const int MAX_ITER = 2;
   int iter = 0;
   while (iter < MAX_ITER) {
     int subcount = 0;

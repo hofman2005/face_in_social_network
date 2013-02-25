@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 13 Nov 2012 02:53:19 PM
+# Last-modified: 31 Jan 2013 01:55:29 PM
 #
 # Filename: social_graph.cc
 #
@@ -94,7 +94,12 @@ void ReadAlbumMapFromFile(const std::string &input_file,
     if (!in.good()) break;
     if (first == '\n') in.get(first); // Skip the \n at the end of each line.
     //if (content[0]=='#') {
-    if (first == '#') {
+    // Support comment
+    if (first == '%') {
+      getline(in, content);
+      continue;
+    }
+    else if (first == '#') {
       //current_id = content.substr(1, content.size()-1);
       in >> current_id;
     } else {

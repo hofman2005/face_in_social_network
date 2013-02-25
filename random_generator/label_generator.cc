@@ -2,8 +2,6 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 11 Jan 2013 02:32:35 PM
-#
 # Filename: label_generator.cc
 #
 =========================================*/
@@ -11,6 +9,7 @@
 #include "random_generator/random_generators.h"
 #include <vector>
 #include <set>
+#include <map>
 #include <algorithm>
 
 namespace SocialNetwork {
@@ -112,20 +111,29 @@ void RandomGenerators::LabelGenerator2(AlbumMap *image_map, double label_percent
 void RandomGenerators::LabelGenerator_WrongLabels(AlbumMap* image_map, double wrong_label_percent) {
   using namespace std;
   // srand( time(NULL) );
+  int total_count = 0;
+  int total_changed = 0;
   for (AlbumMap::iterator it = image_map->begin();
       it != image_map->end();
       ++it) {
     Album& album = it->second;
 
     // Collect a set of available ids.
-    set<string> ids;
+    vector<string> ids;
+    map<string, int> ids_map;
+    int count = 0;
     for (Album::iterator itt = album.begin();
         itt != album.end();
         ++itt) {
       string id = itt->GetAssignedId();
-      if (id == "-")
+      if (id == "-" || ids_map.count(id) > 0) {
         continue;
-      ids.insert(id);
+      }
+      else {
+        ids.push_back(id);
+        ids_map[id] = count;
+        ++count;
+      }
     }
     if (ids.size() <=1) 
       continue;
@@ -138,27 +146,24 @@ void RandomGenerators::LabelGenerator_WrongLabels(AlbumMap* image_map, double wr
         continue;
 
       // Change the label
+      swap(ids[ids_map[id]], ids.back());
       unsigned int i = rand() % 1000;
-      if (i < 1000 * wrong_label_percent) {
-        int retry = 0;
-        bool flag = true;
-        while (flag && retry < 20) {
-          ++retry;
-          unsigned int p = rand() % ids.size();
-          set<string>::iterator it_id = ids.begin();
-          advance(it_id, p);
-          if (*it_id == id) {
-            continue;
-          } else {
-            flag = false;
-            itt->SetAssignedId(*it_id, "Amb");
-          }
+      if (ids.size() > 2 && i < 1000 * wrong_label_percent) {
+        unsigned int p = rand() % (ids.size()-1);
+        itt->SetAssignedId(ids[p], "Amb");
+        if (ids[p] != id) {
+          total_changed ++;
         }
       } else {
         itt->SetAssignedId(id, "Amb");
       }
+      swap(ids[ids_map[id]], ids.back());
+
+      total_count ++;
     }
   }
+
+  cout << "Actual correct percentage: " << static_cast<double>(total_count-total_changed) / total_count << endl;
 
 }
 

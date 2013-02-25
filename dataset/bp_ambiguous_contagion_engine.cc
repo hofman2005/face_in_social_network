@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 31 Jan 2013 02:37:55 PM
+# Last-modified: 25 Feb 2013 04:36:37 PM
 #
 # Filename: bp_ambiguous_contagion_engine.cc
 #
@@ -15,15 +15,15 @@
 #include <time.h>
 
 namespace SocialNetwork {
-template <class AmbiguousClassifier>
-int BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::Init() {
+// template <class AmbiguousClassifier>
+int BeliefPropagationAmbiguousContagionEngine::Init() {
   srand( time(NULL) );
   return 0;
 }
 
 // Generate the initial label list and weights.
-template <class AmbiguousClassifier>
-int BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::FirstRun() {
+// template <class AmbiguousClassifier>
+int BeliefPropagationAmbiguousContagionEngine::FirstRun() {
   VertexIterator vi, vi_end;
   for (tie(vi, vi_end) = vertices(*graph_);
       vi != vi_end;
@@ -39,8 +39,8 @@ int BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::FirstRun() {
   return 0;
 }
 
-template <class AmbiguousClassifier>
-int BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::Run() {
+// template <class AmbiguousClassifier>
+int BeliefPropagationAmbiguousContagionEngine::Run() {
   // FirstRun();
 
   visit_queue_1_.clear();
@@ -68,9 +68,10 @@ int BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::Run() {
       Vertex current = visit_queue_1_.front();
       visit_queue_1_.pop_front();
 
-      if (classifier_)
-        delete classifier_;
-      classifier_ = new AmbiguousClassifier;
+      // if (classifier_)
+      //   delete classifier_;
+      // classifier_ = new AmbiguousClassifier;
+      classifier_->Reset();
 
       // Train
       if (TrainOnSingleVertex(current) < 0)
@@ -124,8 +125,8 @@ int BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::Run() {
   return 0;
 }
 
-template <class AmbiguousClassifier>
-int BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::AppendTrainingImageList
+// template <class AmbiguousClassifier>
+int BeliefPropagationAmbiguousContagionEngine::AppendTrainingImageList
   (Vertex current, 
    FaceRecognition::AmbiguousImageList * image_list,
    bool load_image) {
@@ -140,8 +141,8 @@ int BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::AppendTraini
     return 0;
 }
 
-template <class AmbiguousClassifier>
-int BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::TrainOnSingleVertex(Vertex current) {
+// template <class AmbiguousClassifier>
+int BeliefPropagationAmbiguousContagionEngine::TrainOnSingleVertex(Vertex current) {
   std::cout << "Training on " << (*graph_)[current].person_id << std::endl;
 
   // Prepare the image list
@@ -161,8 +162,8 @@ int BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::TrainOnSingl
   return res;
 }
 
-template <class AmbiguousClassifier>
-int BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::PropagateOnSingleVertex
+// template <class AmbiguousClassifier>
+int BeliefPropagationAmbiguousContagionEngine::PropagateOnSingleVertex
   (const Vertex base, 
    const Vertex current, 
    AlbumMap* album_map) {
@@ -202,8 +203,8 @@ int BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::PropagateOnS
   return 0;
 }
 
-template <class AmbiguousClassifier>
-bool BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::MakeDecisionOnSingleVertex (Album* album) {
+// template <class AmbiguousClassifier>
+bool BeliefPropagationAmbiguousContagionEngine::MakeDecisionOnSingleVertex (Album* album) {
   bool changed = false;
   float count = 0;
   float correct_count = 0;
@@ -243,8 +244,8 @@ bool BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::MakeDecisio
   return changed;
 }
 
-template <class AmbiguousClassifier>
-int BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::
+// template <class AmbiguousClassifier>
+int BeliefPropagationAmbiguousContagionEngine::
 PrepareRansacTrainingImageList(Vertex current,
                                FaceRecognition::AmbiguousImageList * image_list,
                                double select_ratio) {
@@ -268,8 +269,8 @@ PrepareRansacTrainingImageList(Vertex current,
   return 0;
 }
 
-template <class AmbiguousClassifier>
-int BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::RansacOnSingleVertex (Vertex current) {
+// template <class AmbiguousClassifier>
+int BeliefPropagationAmbiguousContagionEngine::RansacOnSingleVertex (Vertex current) {
   AlbumMap album_copy = *album_map_;
 
   const int max_fold = 3;
@@ -278,9 +279,10 @@ int BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::RansacOnSing
   for (int i=0; i<max_fold; ++i) {
     std::cout << "Ransac training on " << (*graph_)[current].person_id << 
       " fold " << i << " of " << max_fold << std::endl;
-    if (classifier_)
-      delete classifier_;
-    classifier_ = new AmbiguousClassifier;
+    // if (classifier_)
+    //   delete classifier_;
+    // classifier_ = new AmbiguousClassifier;
+    classifier_->Reset();
 
     FaceRecognition::AmbiguousImageList image_list;
     // Prepare the training samples.
@@ -307,8 +309,8 @@ int BeliefPropagationAmbiguousContagionEngine<AmbiguousClassifier>::RansacOnSing
     PropagateOnSingleVertex(current, current, &album_copy);
     
     // Release
-    delete classifier_;
-    classifier_ = NULL;
+    // delete classifier_;
+    // classifier_ = NULL;
   }
 
   album_map_->swap(album_copy);

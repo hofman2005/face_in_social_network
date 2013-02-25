@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 31 Jan 2013 05:01:15 PM
+# Last-modified: 25 Feb 2013 04:40:37 PM
 #
 # Filename: contagion.cc
 #
@@ -22,7 +22,7 @@
 
 int main(int argc, char **argv) {
   namespace sn = SocialNetwork;
-  namespace fn = FaceRecognition;
+  namespace fr = FaceRecognition;
   namespace po = boost::program_options;
 
   // Parse options
@@ -94,16 +94,23 @@ int main(int argc, char **argv) {
   */
 
   // Self defind visit engine.
-//  sn::BaseContagionEngine * contagion_engine = new sn::BfsCrossContagionEngine<fn::PCAClassifier>(image_prefix, &graph, &album_map);
-//  sn::BaseContagionEngine * contagion_engine = new sn::ParallelCrossContagionEngine<fn::PCAClassifier>(image_prefix, &graph, &album_map);
-  // sn::BaseContagionEngine * contagion_engine = new sn::BeliefPropagationContagionEngine<fn::PCAClassifier>(image_prefix, &graph, &album_map);
+//  sn::BaseContagionEngine * contagion_engine = new sn::BfsCrossContagionEngine<fr::PCAClassifier>(image_prefix, &graph, &album_map);
+//  sn::BaseContagionEngine * contagion_engine = new sn::ParallelCrossContagionEngine<fr::PCAClassifier>(image_prefix, &graph, &album_map);
+  // sn::BaseContagionEngine * contagion_engine = new sn::BeliefPropagationContagionEngine<fr::PCAClassifier>(image_prefix, &graph, &album_map);
   // Self correct (Exp 2)
-  sn::BaseContagionEngine * contagion_engine = new sn::BeliefPropagationAmbiguousContagionEngine<fn::PCAAmbiguousClassifier>(image_prefix, &graph, &album_map);
+  // sn::BaseContagionEngine * contagion_engine = new sn::BeliefPropagationAmbiguousContagionEngine<fr::PCAAmbiguousClassifier>(image_prefix, &graph, &album_map);
+
+  sn::BaseContagionEngine * contagion_engine = new sn::BeliefPropagationAmbiguousContagionEngine(image_prefix, &graph, &album_map);
+  fr::BaseAmbiguousClassifier * classifier = new fr::PCAAmbiguousClassifier;
+  contagion_engine->SetClassifier(classifier);
+  
   //contagion_engine->Init("Infection_Source");
   contagion_engine->Init();
   contagion_engine->FirstRun();
   contagion_engine->Run();
+
   delete contagion_engine;
+  delete classifier;
  
   // Save result
   // Save graph

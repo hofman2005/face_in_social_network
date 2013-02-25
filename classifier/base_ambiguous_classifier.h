@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 12 Dec 2012 11:20:02 AM
+# Last-modified: 25 Feb 2013 04:40:07 PM
 #
 # Filename: base_ambiguous_classifier.h
 #
@@ -23,6 +23,8 @@ class BaseAmbiguousClassifier {
   public:
     BaseAmbiguousClassifier() {};
     virtual ~BaseAmbiguousClassifier() {};
+
+    virtual int Reset() {return 0;};
 
     virtual int Train(const AmbiguousImageList& image_list)
     {std::cout << "Dummy Training." << std::endl; return 0;};

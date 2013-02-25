@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 10 Nov 2012 09:47:57 PM
+# Last-modified: 25 Feb 2013 04:18:42 PM
 #
 # Filename: classifier.h
 #
@@ -30,6 +30,8 @@ class BaseClassifier {
  public:
   BaseClassifier() {};
   virtual ~BaseClassifier() {};
+
+  virtual int Reset() {return 0;};
 
   virtual int SetParameters() {return 0;};
 

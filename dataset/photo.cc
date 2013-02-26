@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 09 Nov 2012 04:30:14 PM
+# Last-modified: 26 Feb 2013 03:23:43 PM
 #
 # Filename: photo.cc
 #
@@ -10,6 +10,8 @@
 
 #include "dataset/photo.h"
 #include <highgui.h>
+#include <fstream>
+#include <string>
 
 namespace SocialNetwork {
 
@@ -24,6 +26,18 @@ void Photo::SetAssignedId(const std::string &id,
 
 cv::Mat Photo::GetImage(const std::string &prefix) {
     return cv::imread(prefix+image_file_, 0);
+    // return GetFeature(prefix);
+}
+
+cv::Mat Photo::GetFeature(const std::string &prefix) {
+  std::string filename = prefix+image_file_+".fea";
+  std::ifstream file(filename.c_str()); 
+  file.seekg(0, std::ios::end);
+  int length = file.tellg();
+  cv::Mat feature(1, length/sizeof(double), CV_64FC1);
+  file.seekg(0, std::ios::beg);
+  file.read(reinterpret_cast<char*>(feature.data), length);
+  return feature;
 }
 
 int Photo::ReadFromStream(std::istringstream& in) {

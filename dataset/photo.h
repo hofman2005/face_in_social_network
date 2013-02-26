@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 09 Nov 2012 04:30:55 PM
+# Last-modified: 25 Feb 2013 05:56:06 PM
 #
 # Filename: photo.h
 #
@@ -51,6 +51,7 @@ class Photo {
   const std::string DecideId();
 
   cv::Mat GetImage(const std::string &prefix);
+  cv::Mat GetFeature(const std::string &prefix);
   // void ReleaseImage();
   
   int WriteToStream(std::ofstream& out) const;

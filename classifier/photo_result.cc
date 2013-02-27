@@ -45,7 +45,7 @@ int PhotoResult::AddRecord(const std::string& id, const double score, MergeType 
 
   // score_map_[id] += score;
   // cache_dirty_ = true;
-  record_.push_back(FullRecord(id, score));
+  record_.push_back(FullRecord(id, score, ""));
   
   return 0;
 }
@@ -115,15 +115,15 @@ std::ostream& PhotoResult::WriteToStream(std::ostream& out) const {
   out << endl;
 
   // DEBUG
-  out << "% DEBUG_BEGIN" << endl;
-  out << "%" ;
-  for (vector<FullRecord>::const_iterator itt = record_.begin(); 
-      itt != record_.end();
-      ++itt) {
-    out << itt->id << " " << itt->score << " ";
-  }
-  out << endl;
-  out << "% DEBUG_END" << endl;
+  // out << "% DEBUG_BEGIN" << endl;
+  // out << "%" ;
+  // for (vector<FullRecord>::const_iterator itt = record_.begin(); 
+  //     itt != record_.end();
+  //     ++itt) {
+  //   out << itt->id << " " << itt->score << " ";
+  // }
+  // out << endl;
+  // out << "% DEBUG_END" << endl;
   
   return out;
 }

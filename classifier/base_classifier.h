@@ -2,12 +2,9 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 25 Feb 2013 04:18:42 PM
-#
 # Filename: classifier.h
 #
 =========================================*/
-
 #ifndef CLASSIFIER_BASE_CLASSIFIER_H_
 #define CLASSIFIER_BASE_CLASSIFIER_H_
 
@@ -19,6 +16,7 @@
 
 #include <iostream>
 
+#include "dataset/photo.h"
 #include "classifier/photo_result.h"
 
 namespace FaceRecognition {
@@ -37,6 +35,7 @@ class BaseClassifier {
 
   virtual int Train(const ImageList& image_list) 
     {std::cout << "Dummy Training." << std::endl;return 0;};
+  virtual int Train(SocialNetwork::Album& training_album) {};
 
   virtual int TrainWithUpdatedLabels(const ImageList& image_list) 
     {std::cout << "Dummy Training with updated labels." << std::endl; return 0;};
@@ -51,6 +50,7 @@ class BaseClassifier {
 
   virtual bool Identify(const cv::Mat& image, PhotoResult* res)
     {std::cout << "Dummy Identify ver3." << std::endl; return false;};
+  virtual bool Identify(const SocialNetwork::Album& testing_album, SocialNetwork::Album& result_album) {};
 
   virtual bool Verify() {return false;};
 

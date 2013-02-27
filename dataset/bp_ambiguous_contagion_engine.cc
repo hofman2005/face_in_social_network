@@ -2,8 +2,6 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 25 Feb 2013 04:36:37 PM
-#
 # Filename: bp_ambiguous_contagion_engine.cc
 #
 =========================================*/

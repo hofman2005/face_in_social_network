@@ -2,8 +2,6 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 31 Jan 2013 02:40:19 PM
-#
 # Filename: bp_contagion_engine.cc
 #
 =========================================*/
@@ -14,36 +12,36 @@
 #include "dataset/bp_contagion_engine.h"
 
 namespace SocialNetwork {
-template <class Classifier>
-BeliefPropagationContagionEngine<Classifier>::~BeliefPropagationContagionEngine() {
-  ReleaseAllClassifiers();
+// template <class Classifier>
+BeliefPropagationContagionEngine::~BeliefPropagationContagionEngine() {
+  // ReleaseAllClassifiers();
 }
 
-template <class Classifier>
-int BeliefPropagationContagionEngine<Classifier>::ReleaseAllClassifiers() {
-  for (std::vector<FaceRecognition::BaseClassifier*>::iterator it = classifiers_.begin();
-       it != classifiers_.end();
-       ++it) {
-    if (*it) delete *it;
-  }
+// template <class Classifier>
+int BeliefPropagationContagionEngine::ReleaseAllClassifiers() {
+  // for (std::vector<FaceRecognition::BaseClassifier*>::iterator it = classifiers_.begin();
+  //      it != classifiers_.end();
+  //      ++it) {
+  //   if (*it) delete *it;
+  // }
   return 0;
 }
 
-template <class Classifier>
-int BeliefPropagationContagionEngine<Classifier>::Init() {
+// template <class Classifier>
+int BeliefPropagationContagionEngine::Init() {
   // Initialize the classifiers
-  ReleaseAllClassifiers();
-  classifiers_.clear();
+  // ReleaseAllClassifiers();
+  // classifiers_.clear();
 
-  for (int i=0; i<num_vertices(*graph_); ++i) {
-    classifiers_.push_back(new Classifier);
-  }
+  // for (int i=0; i<num_vertices(*graph_); ++i) {
+  //   classifiers_.push_back(new Classifier);
+  // }
 
   return 0;
 }
 
-template <class Classifier>
-int BeliefPropagationContagionEngine<Classifier>::Run() {
+// template <class Classifier>
+int BeliefPropagationContagionEngine::Run() {
   visit_queue_1_.clear();
   visit_queue_2_.clear();
 
@@ -103,7 +101,7 @@ int BeliefPropagationContagionEngine<Classifier>::Run() {
       //}
 
       // Release the classifier
-      classifiers_.clear();
+      //classifiers_.clear();
 
       ++subcount;
     }
@@ -135,8 +133,8 @@ int BeliefPropagationContagionEngine<Classifier>::Run() {
   return 0;
 }
 
-template <class Classifier>
-bool BeliefPropagationContagionEngine<Classifier>::MakeDecisionOnSingleVertex (Album* album) {
+// template <class Classifier>
+bool BeliefPropagationContagionEngine::MakeDecisionOnSingleVertex (Album* album) {
   bool changed = false;
   float count = 0;
   float correct_count = 0;
@@ -155,7 +153,7 @@ bool BeliefPropagationContagionEngine<Classifier>::MakeDecisionOnSingleVertex (A
       double score_0, score_1;
       res.GetSortedDecision(0, &score_0, &id_0);
       res.GetSortedDecision(1, &score_1, &id_1);
-      if (fabs(score_1 / score_0) > threshold) {
+      if (fabs(score_0 / score_1) > threshold) {
         res_id = id_0;
         if (it->GetAssignedId() != res_id) {
           it->SetAssignedId(res_id, "n/a");
@@ -179,8 +177,8 @@ bool BeliefPropagationContagionEngine<Classifier>::MakeDecisionOnSingleVertex (A
   return changed;
 }
 
-template <class Classifier>
-int BeliefPropagationContagionEngine<Classifier>::AppendTrainingImageList
+// template <class Classifier>
+int BeliefPropagationContagionEngine::AppendTrainingImageList
   (Vertex current, 
    FaceRecognition::ImageList * image_list,
    bool load_image) {
@@ -201,15 +199,16 @@ int BeliefPropagationContagionEngine<Classifier>::AppendTrainingImageList
     return 0;
 }
 
-template <class Classifier>
-int BeliefPropagationContagionEngine<Classifier>::TrainOnSingleVertex(Vertex current) {
+// template <class Classifier>
+int BeliefPropagationContagionEngine::TrainOnSingleVertex(Vertex current) {
   // Do not process the dummy source
   // if ((*graph_)[current].person_id == "Infection_Source") return 0;
   
   std::cout << "Training on " << (*graph_)[current].person_id << std::endl;
 
   // Prepare the image list
-  bool load_image = !classifiers_[current]->IsTrained();
+  // bool load_image = !classifiers_[current]->IsTrained();
+  bool load_image = true;
   FaceRecognition::ImageList image_list;
   AppendTrainingImageList(current, &image_list);
 
@@ -222,11 +221,13 @@ int BeliefPropagationContagionEngine<Classifier>::TrainOnSingleVertex(Vertex cur
   // }
 
   // Train
-  if (classifiers_[current]->IsTrained()) {
-    classifiers_[current]->TrainWithUpdatedLabels(image_list);
-  } else {
-    classifiers_[current]->Train(image_list);
-  }
+  // if (classifiers_[current]->IsTrained()) {
+  //   classifiers_[current]->TrainWithUpdatedLabels(image_list);
+  // } else {
+  //   classifiers_[current]->Train(image_list);
+  // }
+  classifier_->Reset();
+  classifier_->Train(image_list);
 
   // Release resources
   for (FaceRecognition::ImageList::iterator it = image_list.begin();
@@ -238,8 +239,8 @@ int BeliefPropagationContagionEngine<Classifier>::TrainOnSingleVertex(Vertex cur
   return 0;
 }
 
-template <class Classifier>
-int BeliefPropagationContagionEngine<Classifier>::PropagateOnSingleVertex
+// template <class Classifier>
+int BeliefPropagationContagionEngine::PropagateOnSingleVertex
   (const Vertex base, 
    const Vertex current, 
    AlbumMap* album_map) {
@@ -248,7 +249,7 @@ int BeliefPropagationContagionEngine<Classifier>::PropagateOnSingleVertex
   // if ((*graph_)[base].person_id    == "Infection_Source") return 0;
   // if ((*graph_)[current].person_id == "Infection_Source") return 0;
   
-  FaceRecognition::BaseClassifier* pclassifier = classifiers_[base]; 
+  // FaceRecognition::BaseClassifier* pclassifier = classifiers_[base]; 
 
   Album &album = (*album_map)[(*graph_)[current].person_id]; 
   std::cout << "Propagate to " << (*graph_)[current].person_id
@@ -288,7 +289,7 @@ int BeliefPropagationContagionEngine<Classifier>::PropagateOnSingleVertex
     // Identify
     // FaceRecognition::PhotoResult& res = it->GetPhotoRes();
     FaceRecognition::PhotoResult& res = album[it].GetPhotoRes();
-    pclassifier->Identify(image, &res); 
+    classifier_->Identify(image, &res); 
 
     // // Make a decision.
     // std::string res_id = "-";
@@ -330,8 +331,8 @@ int BeliefPropagationContagionEngine<Classifier>::PropagateOnSingleVertex
   return 0;
 }
 
-template <class Classifier>
-int BeliefPropagationContagionEngine<Classifier>::
+// template <class Classifier>
+int BeliefPropagationContagionEngine::
 PrepareRansacTrainingImageList(Vertex current,
                                FaceRecognition::ImageList * image_list,
                                double select_ratio) {
@@ -353,8 +354,8 @@ PrepareRansacTrainingImageList(Vertex current,
   return 0;
 }
 
-template <class Classifier>
-int BeliefPropagationContagionEngine<Classifier>::RansacOnSingleVertex (Vertex current) {
+// template <class Classifier>
+int BeliefPropagationContagionEngine::RansacOnSingleVertex (Vertex current) {
   AlbumMap album_copy = *album_map_;
 
   const int max_fold = 5;
@@ -363,9 +364,10 @@ int BeliefPropagationContagionEngine<Classifier>::RansacOnSingleVertex (Vertex c
   for (int i=0; i<max_fold; ++i) {
     std::cout << "Ransac training on " << (*graph_)[current].person_id << 
       " fold " << i << " of " << max_fold << std::endl;
-    if (classifier_)
-      delete classifier_;
-    classifier_ = new Classifier;
+    // if (classifier_)
+    //   delete classifier_;
+    // classifier_ = new Classifier;
+    classifier_->Reset();
 
     FaceRecognition::ImageList image_list;
     // Prepare the training samples.
@@ -389,14 +391,14 @@ int BeliefPropagationContagionEngine<Classifier>::RansacOnSingleVertex (Vertex c
       continue;
 
     // Test
-    FaceRecognition::BaseClassifier* old_classifier = classifiers_[current];
-    classifiers_[current] = classifier_;
+    // FaceRecognition::BaseClassifier* old_classifier = classifiers_[current];
+    // classifiers_[current] = classifier_;
     PropagateOnSingleVertex(current, current, &album_copy);
-    classifiers_[current] = old_classifier;
+    // classifiers_[current] = old_classifier;
     
     // Release
-    delete classifier_;
-    classifier_ = NULL;
+    // delete classifier_;
+    // classifier_ = NULL;
   }
 
   album_map_->swap(album_copy);
@@ -411,8 +413,8 @@ int BeliefPropagationContagionEngine<Classifier>::RansacOnSingleVertex (Vertex c
 }
 
 // Generate the initial label list and weights.
-template <class Classifier>
-int BeliefPropagationContagionEngine<Classifier>::FirstRun() {
+// template <class Classifier>
+int BeliefPropagationContagionEngine::FirstRun() {
   VertexIterator vi, vi_end;
   for (tie(vi, vi_end) = vertices(*graph_);
       vi != vi_end;

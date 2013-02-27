@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 09 Nov 2012 03:15:50 PM
+# Last-modified: 26 Feb 2013 05:03:47 PM
 #
 # Filename: social_graph.h
 #
@@ -21,11 +21,6 @@
 #include "dataset/photo.h"
 
 namespace SocialNetwork {
-class Photo;
-//typedef std::map< std::string, std::vector<std::string> > AlbumMap;
-typedef std::vector<Photo> Album;
-typedef std::map< std::string, Album > AlbumMap;
-
 class PersonProperty;
 typedef boost::adjacency_list<boost::listS, 
                               boost::vecS, 

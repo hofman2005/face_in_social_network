@@ -2,8 +2,6 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 25 Feb 2013 04:33:08 PM
-#
 # Filename: bp_contagion_engine.h
 #
 =========================================*/
@@ -18,13 +16,13 @@
 #include <set>
 
 namespace SocialNetwork {
-template <class Classifier>
+// template <class Classifier>
 class BeliefPropagationContagionEngine : public BaseContagionEngine {
   public:
     BeliefPropagationContagionEngine(const std::string& image_prefix,
                                      SocialGraph* graph,
                                      AlbumMap* album_map)
-      : classifier_(NULL), 
+      : // classifier_(NULL), 
         BaseContagionEngine(image_prefix, graph, album_map){};
     virtual ~BeliefPropagationContagionEngine();
 
@@ -47,8 +45,8 @@ class BeliefPropagationContagionEngine : public BaseContagionEngine {
         double select_ratio);
     int RansacOnSingleVertex(Vertex current);
 
-    std::vector<FaceRecognition::BaseClassifier*> classifiers_;
-    FaceRecognition::BaseClassifier* classifier_;
+    // std::vector<FaceRecognition::BaseClassifier*> classifiers_;
+    // FaceRecognition::BaseClassifier* classifier_;
 
     std::deque<Vertex> visit_queue_1_, visit_queue_2_;
     std::set<Vertex> need_decision_set_;

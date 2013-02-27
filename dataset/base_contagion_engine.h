@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 25 Feb 2013 04:38:47 PM
+# Last-modified: 26 Feb 2013 05:19:00 PM
 #
 # Filename: base_contagion_engine.h
 #
@@ -31,7 +31,7 @@ class BaseContagionEngine {
   //virtual int Init(const std::string& start_id) {};
   virtual int FirstRun() {};
   virtual int Run() {};
-  virtual void SetClassifier(FaceRecognition::BaseAmbiguousClassifier* classifier) {
+  virtual void SetClassifier(FaceRecognition::BaseClassifier* classifier) {
     classifier_ = classifier;
   }
 
@@ -40,7 +40,7 @@ class BaseContagionEngine {
   SocialGraph* graph_;
   AlbumMap* album_map_;
 
-  FaceRecognition::BaseAmbiguousClassifier* classifier_;
+  FaceRecognition::BaseClassifier* classifier_;
 };
 }
 

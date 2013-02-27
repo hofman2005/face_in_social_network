@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 04 Dec 2012 04:45:36 PM
+# Last-modified: 27 Feb 2013 02:41:35 PM
 #
 # Filename: pca_classifier.cc
 #
@@ -16,6 +16,20 @@
 namespace FaceRecognition {
 PCAClassifier::~PCAClassifier() {
   if (feature_) delete feature_;
+  if (kernel2_) delete kernel2_;
+}
+
+int PCAClassifier::Reset() {
+  id_table_.clear();
+  id_table_reverse_.clear();
+
+  if (feature_) delete feature_;
+  feature_ = NULL;
+
+  if (kernel2_) delete kernel2_;
+  kernel2_ = new InnerBayesClassifier();
+
+  return 0;
 }
 
 int PCAClassifier::Train(const ImageList &image_list) {
@@ -74,7 +88,7 @@ int PCAClassifier::TrainWithUpdatedLabels(const ImageList &image_list) {
     labels.push_back(train_label.at<int>(useful_index[i]));
   }
   
-  kernel2_.train(feature, labels);
+  kernel2_->train(feature, labels);
   //kernel_.Train(feature, labels);
 
   return 0;
@@ -98,7 +112,7 @@ bool PCAClassifier::Identify(cv::Mat &image, std::string *id) {
 
   //cv::Mat feature = pca_.project(test_data);
   cv::Mat feature = test_data;
-  int res = kernel2_.predict(feature);
+  int res = kernel2_->predict(feature);
   //double res = kernel_.find_nearest(feature, 1);
   //std::cout << "Res " << res << std::endl;
   *id = id_table_reverse_[static_cast<int>(res)]; 
@@ -126,7 +140,7 @@ bool PCAClassifier::Identify(cv::Mat& image, std::map<std::string, double>* res)
 
   std::map<int, double> raw_res; 
   //kernel_.Identify(feature, &raw_res);
-  kernel2_.predict(feature, &raw_res);
+  kernel2_->predict(feature, &raw_res);
 
   std::map<int, double>::iterator it;
   for (it=raw_res.begin(); it!=raw_res.end(); ++it) {
@@ -160,7 +174,7 @@ bool PCAClassifier::Identify(const cv::Mat& image, PhotoResult* res) {
 
   std::map<int, double> raw_res; 
   //kernel_.Identify(feature, &raw_res);
-  kernel2_.predict(feature, &raw_res);
+  kernel2_->predict(feature, &raw_res);
 
   // std::map<int, double>::const_iterator it;
   for (std::map<int, double>::const_iterator it=raw_res.begin();

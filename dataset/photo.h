@@ -2,12 +2,9 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 25 Feb 2013 05:56:06 PM
-#
 # Filename: photo.h
 #
 =========================================*/
-
 #ifndef DATASET_PHOTO_H_
 #define DATASET_PHOTO_H_
 
@@ -68,6 +65,9 @@ class Photo {
   // PhotoRes res_;
   FaceRecognition::PhotoResult res_;
 };
+
+typedef std::vector<Photo> Album;
+typedef std::map< std::string, Album > AlbumMap;
 
 }
 

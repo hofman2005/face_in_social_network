@@ -13,9 +13,10 @@ class PhotoResult {
     struct FullRecord {
       double score;
       std::string id;
+      std::string source;
       FullRecord() {};
-      FullRecord(const std::string& _id, const double _score)
-        : score(_score), id(_id) {};
+      FullRecord(const std::string& _id, const double _score, const std::string& _source)
+        : score(_score), id(_id), source(_source) {};
     };
  public:
   enum MergeType {TAKE_MAX, TAKE_MEAN, TAKE_MIN};

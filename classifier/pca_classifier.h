@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 10 Nov 2012 09:46:14 PM
+# Last-modified: 27 Feb 2013 12:42:12 PM
 #
 # Filename: pca_classifier.h
 #
@@ -21,16 +21,19 @@
 namespace FaceRecognition {
 class PCAClassifier : public BaseClassifier {
  public:
-  PCAClassifier() : feature_(NULL) {};
-  ~PCAClassifier();
+  PCAClassifier() 
+    : feature_(NULL),
+      kernel2_(new InnerBayesClassifier) {};
+  virtual ~PCAClassifier();
  
 //   int SetParameters() {};
-   int Train(const ImageList& image_list);
-   int TrainWithUpdatedLabels(const ImageList& image_list);
-   bool Identify(cv::Mat& image, std::string *id);
-   bool Identify(cv::Mat& image, std::map<std::string, double>* res);
-   bool Identify(const cv::Mat& image, PhotoResult* res);
-//   bool Verify() {};
+  virtual int Reset();
+  virtual int Train(const ImageList& image_list);
+  virtual int TrainWithUpdatedLabels(const ImageList& image_list);
+  virtual bool Identify(cv::Mat& image, std::string *id);
+  virtual bool Identify(cv::Mat& image, std::map<std::string, double>* res);
+  virtual bool Identify(const cv::Mat& image, PhotoResult* res);
+  //   bool Verify() {};
 // 
 //   int Load() {};
 //   int Save() {};
@@ -38,9 +41,9 @@ class PCAClassifier : public BaseClassifier {
  private:
    //CvNormalBayesClassifier kernel2_;
    //CvKNearest kernel_;
-   InnerBayesClassifier kernel2_;
+   InnerBayesClassifier * kernel2_;
    cv::Mat* feature_;
-   cv::PCA pca_;
+   // cv::PCA pca_;
    std::map<std::string, int> id_table_;
    std::map<int, std::string> id_table_reverse_;
 };

@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 25 Feb 2013 04:40:07 PM
+# Last-modified: 26 Feb 2013 05:10:30 PM
 #
 # Filename: base_ambiguous_classifier.h
 #
@@ -13,6 +13,7 @@
 #include <iostream>
 #include <cv.h>
 
+#include "dataset/photo.h"
 #include "classifier/photo_result.h"
 
 namespace FaceRecognition {
@@ -28,11 +29,13 @@ class BaseAmbiguousClassifier {
 
     virtual int Train(const AmbiguousImageList& image_list)
     {std::cout << "Dummy Training." << std::endl; return 0;};
+    virtual int Train(SocialNetwork::Album& training_album) {};
 
     virtual bool IsTrained() {return false;};
 
     virtual bool Identify(const cv::Mat& image, PhotoResult* res)
     {std::cout << "Dummy Identify." << std::endl; return false;};
+    virtual bool Identify(const SocialNetwork::Album& testing_album, SocialNetwork::Album& result_album) {};
 };
 
 }

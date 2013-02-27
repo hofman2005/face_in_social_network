@@ -2,8 +2,6 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 25 Feb 2013 04:40:37 PM
-#
 # Filename: contagion.cc
 #
 =========================================*/
@@ -100,13 +98,15 @@ int main(int argc, char **argv) {
   // Self correct (Exp 2)
   // sn::BaseContagionEngine * contagion_engine = new sn::BeliefPropagationAmbiguousContagionEngine<fr::PCAAmbiguousClassifier>(image_prefix, &graph, &album_map);
 
-  sn::BaseContagionEngine * contagion_engine = new sn::BeliefPropagationAmbiguousContagionEngine(image_prefix, &graph, &album_map);
-  fr::BaseAmbiguousClassifier * classifier = new fr::PCAAmbiguousClassifier;
+  sn::BaseContagionEngine * contagion_engine = new sn::BeliefPropagationContagionEngine(image_prefix, &graph, &album_map);
+  fr::BaseClassifier * classifier = new fr::PCAClassifier;
+  // sn::BaseContagionEngine * contagion_engine = new sn::BeliefPropagationAmbiguousContagionEngine(image_prefix, &graph, &album_map);
+  // fr::BaseAmbiguousClassifier * classifier = new fr::PCAAmbiguousClassifier;
   contagion_engine->SetClassifier(classifier);
   
   //contagion_engine->Init("Infection_Source");
   contagion_engine->Init();
-  contagion_engine->FirstRun();
+  // contagion_engine->FirstRun();
   contagion_engine->Run();
 
   delete contagion_engine;

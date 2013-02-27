@@ -308,6 +308,8 @@ struct predict_body {
     {
         int ival;
         double opt = FLT_MAX;
+        const double SCALE = 100000.0;
+        double total = 0.;
 
         for(int i = 0; i < nclasses; i++ )
         {
@@ -330,15 +332,20 @@ struct predict_body {
                 cur += d*d*w->data.db[j];
             }
 
-            if( cur < opt )
-            {
-                cls = i;
-                opt = cur;
-            }
+            cur += c->data.db[i];
+
+            cur = exp(- cur / SCALE);
+            total += cur;
+
+            // if( cur < opt )
+            // {
+            //     cls = i;
+            //     opt = cur;
+            // }
             /* probability = exp( -0.5 * cur ) */
 
             if (res_ != NULL) {
-              (*res_)[cls_labels->data.i[i]] = -cur;
+              (*res_)[cls_labels->data.i[i]] = cur;
               //std::cout << i << " " << cur << std::endl;
             }
         }
@@ -353,7 +360,7 @@ struct predict_body {
           // for (std::map<int, double>::iterator it = res_->begin();
           //     it!=res_->end();
           //     ++it) {
-          //   it->second /= sum;
+          //   it->second /= total;
           // }
         }
 

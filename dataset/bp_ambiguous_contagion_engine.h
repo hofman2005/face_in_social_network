@@ -2,8 +2,6 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 25 Feb 2013 04:36:12 PM
-#
 # Filename: bp_ambiguous_contagion_engine.h
 #
 =========================================*/
@@ -23,7 +21,8 @@ class BeliefPropagationAmbiguousContagionEngine : public BaseContagionEngine {
     BeliefPropagationAmbiguousContagionEngine(const std::string& image_prefix,
         SocialGraph* graph,
         AlbumMap* album_map)
-      : BaseContagionEngine(image_prefix, graph, album_map) {};
+      : classifier_(NULL), 
+        BaseContagionEngine(image_prefix, graph, album_map) {};
     virtual ~BeliefPropagationAmbiguousContagionEngine() {
       // if (classifier_)
       //   delete classifier_;
@@ -49,6 +48,8 @@ class BeliefPropagationAmbiguousContagionEngine : public BaseContagionEngine {
     // FaceRecognition::BaseAmbiguousClassifier* classifier_;
     std::deque<Vertex> visit_queue_1_, visit_queue_2_;
     std::set<Vertex> need_decision_set_;
+
+    FaceRecognition::BaseAmbiguousClassifier* classifier_;
 };
 }
 

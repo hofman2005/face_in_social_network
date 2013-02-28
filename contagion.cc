@@ -65,6 +65,8 @@ int main(int argc, char **argv) {
   std::cout << "Loading album file: " << album_filename << std::endl;
   sn::ReadAlbumMapFromFile(album_filename, &album_map);
 
+  sn::Photo::SetPrefix(image_prefix);
+
   /* Use BFS to visit
   // BFS visit
   // Find start point
@@ -99,7 +101,8 @@ int main(int argc, char **argv) {
   // sn::BaseContagionEngine * contagion_engine = new sn::BeliefPropagationAmbiguousContagionEngine<fr::PCAAmbiguousClassifier>(image_prefix, &graph, &album_map);
 
   sn::BaseContagionEngine * contagion_engine = new sn::BeliefPropagationContagionEngine(image_prefix, &graph, &album_map);
-  fr::BaseClassifier * classifier = new fr::PCAClassifier;
+  // fr::BaseClassifier * classifier = new fr::PCAClassifier;
+  fr::BaseClassifier * classifier = new fr::BayesClassifier;
   // sn::BaseContagionEngine * contagion_engine = new sn::BeliefPropagationAmbiguousContagionEngine(image_prefix, &graph, &album_map);
   // fr::BaseAmbiguousClassifier * classifier = new fr::PCAAmbiguousClassifier;
   contagion_engine->SetClassifier(classifier);

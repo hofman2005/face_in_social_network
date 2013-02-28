@@ -50,7 +50,9 @@ class BaseClassifier {
 
   virtual bool Identify(const cv::Mat& image, PhotoResult* res)
     {std::cout << "Dummy Identify ver3." << std::endl; return false;};
-  virtual bool Identify(const SocialNetwork::Album& testing_album, SocialNetwork::Album& result_album) {};
+  virtual bool Identify(const SocialNetwork::Album& testing_album, SocialNetwork::Album& result_album) {
+    std::cout << "Dummy Identify ver 4." << std::endl;
+  };
 
   virtual bool Verify() {return false;};
 

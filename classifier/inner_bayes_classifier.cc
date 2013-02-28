@@ -332,10 +332,10 @@ struct predict_body {
                 cur += d*d*w->data.db[j];
             }
 
-            cur += c->data.db[i];
+            // cur += c->data.db[i];
 
-            cur = exp(- cur / SCALE);
-            total += cur;
+            // cur = exp(- cur / SCALE);
+            // total += cur;
 
             // if( cur < opt )
             // {

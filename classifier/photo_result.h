@@ -21,7 +21,7 @@ class PhotoResult {
  public:
   enum MergeType {TAKE_MAX, TAKE_MEAN, TAKE_MIN};
   PhotoResult() : cache_dirty_(false) {};
-  int AddRecord(const std::string& id, const double score, MergeType merge_type=TAKE_MEAN);
+  int AddRecord(const std::string& id, const double score, MergeType merge_type=TAKE_MIN);
   int AddRecord(const std::string& id, const double score, const std::string& source);
   double GetRecord(const std::string& id) const;
   inline int GetNumRecord() const {return score_map_.size();};
@@ -44,7 +44,7 @@ class PhotoResult {
   struct IntCmp {
     bool operator()(const std::pair<std::string, double>& lhs, 
                     const std::pair<std::string, double>& rhs) {
-      return lhs.second > rhs.second;
+      return lhs.second < rhs.second;
     };
   };
   std::vector<FullRecord> record_;

@@ -147,13 +147,13 @@ bool BeliefPropagationContagionEngine::MakeDecisionOnSingleVertex (Album* album)
       continue;
     FaceRecognition::PhotoResult& res = it->GetPhotoRes();
     std::string res_id = "-";
-    const double threshold = 2.0f;
+    const double threshold = 4.0f;
     if (res.GetNumRecord() > 1) {
       std::string id_0, id_1;
       double score_0, score_1;
       res.GetSortedDecision(0, &score_0, &id_0);
       res.GetSortedDecision(1, &score_1, &id_1);
-      if (fabs(score_0 / score_1) > threshold) {
+      if (fabs(score_1 / score_0) > threshold) {
         res_id = id_0;
         if (it->GetAssignedId() != res_id) {
           it->SetAssignedId(res_id, "n/a");
@@ -191,7 +191,8 @@ int BeliefPropagationContagionEngine::AppendTrainingImageList
       //   continue;
       cv::Mat * image = new cv::Mat;
       if (load_image) {
-        *image = (*it).GetImage(image_prefix_);
+        //*image = (*it).GetImage(image_prefix_);
+        *image = (*it).GetImage();
       }
       image_list->push_back(std::make_pair(image, id));
     }
@@ -208,7 +209,7 @@ int BeliefPropagationContagionEngine::TrainOnSingleVertex(Vertex current) {
 
   // Prepare the image list
   // bool load_image = !classifiers_[current]->IsTrained();
-  bool load_image = true;
+  // bool load_image = true;
   FaceRecognition::ImageList image_list;
   AppendTrainingImageList(current, &image_list);
 
@@ -227,14 +228,16 @@ int BeliefPropagationContagionEngine::TrainOnSingleVertex(Vertex current) {
   //   classifiers_[current]->Train(image_list);
   // }
   classifier_->Reset();
-  classifier_->Train(image_list);
+  // classifier_->Train(image_list);
+  Album& training_album = (*album_map_)[(*graph_)[current].person_id];
+  classifier_->Train(training_album);
 
   // Release resources
-  for (FaceRecognition::ImageList::iterator it = image_list.begin();
-       it!=image_list.end();
-       ++it) {
-    delete it->first;
-  }
+  // for (FaceRecognition::ImageList::iterator it = image_list.begin();
+  //      it!=image_list.end();
+  //      ++it) {
+  //   delete it->first;
+  // }
 
   return 0;
 }
@@ -284,7 +287,8 @@ int BeliefPropagationContagionEngine::PropagateOnSingleVertex
 
     // Load the image
     // cv::Mat image  = it->GetImage(image_prefix_);
-    image = album[it].GetImage(image_prefix_);
+    // image = album[it].GetImage(image_prefix_);
+    image = album[it].GetImage();
 
     // Identify
     // FaceRecognition::PhotoResult& res = it->GetPhotoRes();
@@ -346,7 +350,8 @@ PrepareRansacTrainingImageList(Vertex current,
 
     if (id != "-" && r < select_ratio) {
       cv::Mat * image = new cv::Mat;
-      *image = it->GetImage(image_prefix_);
+      //*image = it->GetImage(image_prefix_);
+      *image = it->GetImage();
 
       image_list->push_back( std::make_pair(image, id) );
     }

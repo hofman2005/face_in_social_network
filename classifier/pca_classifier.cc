@@ -2,8 +2,6 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 27 Feb 2013 02:41:35 PM
-#
 # Filename: pca_classifier.cc
 #
 =========================================*/

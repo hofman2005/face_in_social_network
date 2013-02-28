@@ -37,6 +37,10 @@ class Photo {
       assigned_by_(assigned_by) {};
   ~Photo();
 
+  static void SetPrefix(std::string& prefix) {
+    image_prefix_ = prefix;
+  };
+
   inline const std::string& GetTrueId() const {return true_id_;};
   inline const std::string& GetFilename() const {return image_file_;};
   inline const std::string& GetAssignedId() const {return assigned_id_;};
@@ -48,6 +52,7 @@ class Photo {
   const std::string DecideId();
 
   cv::Mat GetImage(const std::string &prefix);
+  cv::Mat GetImage();
   cv::Mat GetFeature(const std::string &prefix);
   // void ReleaseImage();
   
@@ -64,11 +69,15 @@ class Photo {
   // Some meta information used for belief propagation?
   // PhotoRes res_;
   FaceRecognition::PhotoResult res_;
+
+  static std::string image_prefix_;
 };
 
-typedef std::vector<Photo> Album;
-typedef std::map< std::string, Album > AlbumMap;
+// typedef std::vector<Photo> Album;
+// typedef std::map< std::string, Album > AlbumMap;
 
 }
+
+#include "dataset/album.h"
 
 #endif  // DATASET_PHOTO_H_

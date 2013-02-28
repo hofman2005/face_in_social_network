@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 26 Feb 2013 03:23:43 PM
+# Last-modified: 28 Feb 2013 11:22:38 AM
 #
 # Filename: photo.cc
 #
@@ -14,6 +14,7 @@
 #include <string>
 
 namespace SocialNetwork {
+  std::string Photo::image_prefix_ = "";
 
 Photo::~Photo() {
 }
@@ -27,6 +28,10 @@ void Photo::SetAssignedId(const std::string &id,
 cv::Mat Photo::GetImage(const std::string &prefix) {
     return cv::imread(prefix+image_file_, 0);
     // return GetFeature(prefix);
+}
+
+cv::Mat Photo::GetImage() {
+  return cv::imread(image_prefix_+image_file_, 0);
 }
 
 cv::Mat Photo::GetFeature(const std::string &prefix) {

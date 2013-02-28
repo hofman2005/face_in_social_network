@@ -16,7 +16,7 @@
 
 #include <iostream>
 
-#include "dataset/photo.h"
+#include "dataset/album.h"
 #include "classifier/photo_result.h"
 
 namespace FaceRecognition {

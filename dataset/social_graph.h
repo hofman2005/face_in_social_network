@@ -2,8 +2,6 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 26 Feb 2013 05:03:47 PM
-#
 # Filename: social_graph.h
 #
 =========================================*/
@@ -18,7 +16,7 @@
 #include <boost/graph/graphviz.hpp>
 #include <map>
 #include <string>
-#include "dataset/photo.h"
+#include "dataset/album.h"
 
 namespace SocialNetwork {
 class PersonProperty;

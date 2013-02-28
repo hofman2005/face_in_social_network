@@ -78,6 +78,6 @@ class Photo {
 
 }
 
-#include "dataset/album.h"
+// #include "dataset/album.h"
 
 #endif  // DATASET_PHOTO_H_

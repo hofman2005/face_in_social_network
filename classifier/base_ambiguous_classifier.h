@@ -2,8 +2,6 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 26 Feb 2013 05:10:30 PM
-#
 # Filename: base_ambiguous_classifier.h
 #
 =========================================*/
@@ -13,7 +11,7 @@
 #include <iostream>
 #include <cv.h>
 
-#include "dataset/photo.h"
+#include "dataset/album.h"
 #include "classifier/photo_result.h"
 
 namespace FaceRecognition {

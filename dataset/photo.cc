@@ -2,8 +2,6 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 28 Feb 2013 11:22:38 AM
-#
 # Filename: photo.cc
 #
 =========================================*/
@@ -31,11 +29,12 @@ cv::Mat Photo::GetImage(const std::string &prefix) {
 }
 
 cv::Mat Photo::GetImage() {
-  return cv::imread(image_prefix_+image_file_, 0);
+  // return cv::imread(image_prefix_+image_file_, 0);
+  return GetFeature();
 }
 
-cv::Mat Photo::GetFeature(const std::string &prefix) {
-  std::string filename = prefix+image_file_+".fea";
+cv::Mat Photo::GetFeature() {
+  std::string filename = image_prefix_+image_file_+".fea";
   std::ifstream file(filename.c_str()); 
   file.seekg(0, std::ios::end);
   int length = file.tellg();

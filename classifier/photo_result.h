@@ -1,3 +1,10 @@
+/*=========================================
+#
+# Author: Tao Wu - taowu@umiacs.umd.edu
+#
+# Filename: photo_result.h
+#
+=========================================*/
 #ifndef CLASSIFIER_PHOTO_RESULT_H_
 #define CLASSIFIER_PHOTO_RESULT_H_
 

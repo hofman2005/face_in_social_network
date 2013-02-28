@@ -53,7 +53,7 @@ class Photo {
 
   cv::Mat GetImage(const std::string &prefix);
   cv::Mat GetImage();
-  cv::Mat GetFeature(const std::string &prefix);
+  cv::Mat GetFeature();
   // void ReleaseImage();
   
   int WriteToStream(std::ofstream& out) const;

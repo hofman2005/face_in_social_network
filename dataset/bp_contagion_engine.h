@@ -16,7 +16,6 @@
 #include <set>
 
 namespace SocialNetwork {
-// template <class Classifier>
 class BeliefPropagationContagionEngine : public BaseContagionEngine {
   public:
     BeliefPropagationContagionEngine(const std::string& image_prefix,
@@ -45,14 +44,9 @@ class BeliefPropagationContagionEngine : public BaseContagionEngine {
         double select_ratio);
     int RansacOnSingleVertex(Vertex current);
 
-    // std::vector<FaceRecognition::BaseClassifier*> classifiers_;
-    // FaceRecognition::BaseClassifier* classifier_;
-
     std::deque<Vertex> visit_queue_1_, visit_queue_2_;
     std::set<Vertex> need_decision_set_;
 };
 }
-
-#include "dataset/bp_contagion_engine.cc"
 
 #endif  // __BP_CONTAGION_ENGINE_H__

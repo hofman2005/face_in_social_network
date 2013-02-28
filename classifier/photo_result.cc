@@ -1,3 +1,10 @@
+/*=========================================
+#
+# Author: Tao Wu - taowu@umiacs.umd.edu
+#
+# Filename: photo_result.cc
+#
+=========================================*/
 #include "classifier/photo_result.h"
 #include <algorithm>
 #include <sstream>

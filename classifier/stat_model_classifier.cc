@@ -57,6 +57,9 @@ int StatModelClassifier::Train() {
   else if (InnerBayesClassifier *p = dynamic_cast<InnerBayesClassifier*>(kernel_)) {
     p->train(feature_, labels_);
   }
+  else if (CvKNearest *p = dynamic_cast<CvKNearest*>(kernel_)) {
+    p->train(feature_, labels_);
+  }
   return 0;
 }
 
@@ -105,20 +108,33 @@ bool StatModelClassifier::Identify(const cv::Mat& image, PhotoResult* res) {
   cv::Mat test_data(1, size.width*size.height, CV_32FC1);
   temp.convertTo(test_data, CV_32FC1);
 
-  std::map<int, double> raw_res;
   // kernel_->predict(test_data, &raw_res);
   if (InnerBayesClassifier *p = dynamic_cast<InnerBayesClassifier*>(kernel_)) {
+    std::map<int, double> raw_res;
     p->predict(test_data, &raw_res);
+    // Save result
+    for (std::map<int, double>::const_iterator it = raw_res.begin();
+        it != raw_res.end();
+        ++it) {
+      const std::string& id = id_table_reverse_.find(it->first)->second;
+      double score = it->second;
+      res->AddRecord(id, score);
+    }
+  }
+  else if (CvKNearest *p = dynamic_cast<CvKNearest*>(kernel_)) {
+    int K = 5;
+    cv::Mat result;
+    cv::Mat neighborResponse;
+    cv::Mat dist;
+    p->find_nearest(test_data, K, result, neighborResponse, dist);
+
+    for (int i=0; i<K; ++i) {
+      const std::string& id = id_table_reverse_.find(neighborResponse.at<float>(i))->second;
+      double score = dist.at<float>(i);
+      res->AddRecord(id, score);
+    }
   }
 
-  // Save result
-  for (std::map<int, double>::const_iterator it = raw_res.begin();
-      it != raw_res.end();
-      ++it) {
-    const std::string& id = id_table_reverse_.find(it->first)->second;
-    double score = it->second;
-    res->AddRecord(id, score);
-  }
 
   return true;
 }

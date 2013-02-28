@@ -16,6 +16,7 @@
 
 #include "dataset/bp_ambiguous_contagion_engine.h"
 #include "classifier/pca_ambiguous_classifier.h"
+#include "classifier/stat_model_classifier.h"
 
 
 int main(int argc, char **argv) {
@@ -102,7 +103,8 @@ int main(int argc, char **argv) {
 
   sn::BaseContagionEngine * contagion_engine = new sn::BeliefPropagationContagionEngine(image_prefix, &graph, &album_map);
   // fr::BaseClassifier * classifier = new fr::PCAClassifier;
-  fr::BaseClassifier * classifier = new fr::BayesClassifier;
+  // fr::BaseClassifier * classifier = new fr::BayesClassifier;
+  fr::BaseClassifier * classifier = new fr::StatModelClassifier(fr::StatModelClassifier::InnerBayes);
   // sn::BaseContagionEngine * contagion_engine = new sn::BeliefPropagationAmbiguousContagionEngine(image_prefix, &graph, &album_map);
   // fr::BaseAmbiguousClassifier * classifier = new fr::PCAAmbiguousClassifier;
   contagion_engine->SetClassifier(classifier);

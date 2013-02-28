@@ -58,6 +58,7 @@ class BaseClassifier {
 
   virtual int Load(std::string &file_name) {return 0;};
   virtual int Save(std::string &file_name) {return 0;};
+
 };
 }
 

@@ -30,9 +30,11 @@ class BayesClassifier : public BaseClassifier {
     bool Identify(const cv::Mat& image, PhotoResult* pres);
 
   private:
+    // int PrepareTrainingData(SocialNetwork::Album& training_album);
     InnerBayesClassifier * kernel_;
     std::map<std::string, int> id_table_;
     std::map<int, std::string> id_table_reverse_;
+    // cv::Mat feature_, labels_;
 };
 }
 

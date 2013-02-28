@@ -1,17 +1,18 @@
 #ifndef CLASSIFIER_INNER_BAYES_CLASSIFIER_H_
 #define CLASSIFIER_INNER_BAYES_CLASSIFIER_H_
 
-#include <cv.h>
+#include <opencv/cv.h>
+#include <opencv/ml.h>
 
 namespace FaceRecognition {
-using namespace cv;
+// using namespace cv;
 
 #define CV_ROW_SAMPLE 1
 #define CV_VAR_CATEGORICAL  1
 #define CV_TYPE_NAME_ML_NBAYES      "opencv-ml-bayesian"
 
 
-class InnerBayesClassifier
+class InnerBayesClassifier : public CvStatModel
 {
 public:
     InnerBayesClassifier();

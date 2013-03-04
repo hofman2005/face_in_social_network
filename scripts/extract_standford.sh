@@ -8,3 +8,7 @@ CMD="./extract_standford -n $NUM $INPUT $OUTPUT"
 
 echo $CMD
 $CMD
+while [ $? -ne $NUM ]
+do
+  $CMD
+done

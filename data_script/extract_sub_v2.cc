@@ -75,7 +75,7 @@ void ExtractMethod_1(map< int, vector<int> >& graph,
   out << "}" << endl;
 }
 
-void ExtractMethod_2(map< int, vector<int> >& graph,
+int ExtractMethod_2(map< int, vector<int> >& graph,
                      const string output,
                      const int id_num,
                      const int id_start) {
@@ -122,6 +122,8 @@ void ExtractMethod_2(map< int, vector<int> >& graph,
     visited_2.insert(id_1);
   }
   out << "}" << endl;
+
+  return count;
 }
   
 void ExtractMethod_3(map< int, vector<int> >& graph,
@@ -158,7 +160,7 @@ void ExtractMethod_3(map< int, vector<int> >& graph,
   out << "}" << endl;
 }
 
-void ExtractSubGraph(const string input,
+int ExtractSubGraph(const string input,
                      const string output,
                      const int id_num,
                      int id_start) {
@@ -178,7 +180,7 @@ void ExtractSubGraph(const string input,
   // Choose different method to generate the graph.
   // method_2 is for generating graph with given number of nodes.
   // method_3 is for generating graph for show.
-  ExtractMethod_2(graph, output, id_num, id_start);
+  return ExtractMethod_2(graph, output, id_num, id_start);
 }
 
 int main(int argc, char ** argv) {
@@ -189,7 +191,7 @@ int main(int argc, char ** argv) {
     string output(argv[4]);
     int id_num = atoi(num.c_str());
     int id_start = atoi(start.c_str());
-    ExtractSubGraph(input, output, id_num, id_start);
+    return ExtractSubGraph(input, output, id_num, id_start);
   } 
   else {
     cout << "Usage: %proc -n NUM [-s START] input output" << endl;

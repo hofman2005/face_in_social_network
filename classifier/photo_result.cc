@@ -24,6 +24,11 @@ int PhotoResult::AddRecord(const string& id, const double score, const string& s
   return 0;
 }
 
+int PhotoResult::GetNumRecord() {
+  if (cache_dirty_ == true) sort_score();
+  return score_map_.size();
+}
+
 double PhotoResult::GetRecord(const string& id) const {
   map<string, double>::const_iterator it = score_map_.find(id);
   if (it == score_map_.end()) {
@@ -69,10 +74,16 @@ void PhotoResult::Prune() {
   score_map_.insert(cache_sorted_score_.begin(), 
       cache_sorted_score_.begin() + min(cache_sorted_score_.size(), NUM));
   record_.clear();
+  for (vector<pair<string, double> >::const_iterator it = cache_sorted_score_.begin();
+      it != cache_sorted_score_.end();
+      ++it) {
+    record_.push_back(FullRecord(it->first, it->second, "Prune"));
+  }
 }
 
 int PhotoResult::Vote() {
-  Vote_Min();
+  // Vote_Min();
+  Vote_kNN();
   return 0;
 }
 
@@ -87,6 +98,36 @@ int PhotoResult::Vote_Min() {
       score_map_[it->id] = min(score_map_[it->id], it->score);
     }
   }
+  return 0;
+}
+
+// Not compatible with Prune()
+int PhotoResult::Vote_kNN() {
+  sort(record_.begin(), record_.end(), FullRecordCmp()); 
+  // map<string, double> knn_score_map_;
+  vector<FullRecord>::const_iterator it = record_.begin();
+  int count = 0;
+  const int MAX_KNN = 5;
+  while (it != record_.end() && count < MAX_KNN) {
+    score_map_[it->id] ++;
+    ++it;
+    ++count;
+  }
+  // cache_sorted_score_.assign(knn_score_map_.begin(), knn_score_map_.end());
+  // for (vector<pair<string, double> >::iterator itt = cache_sorted_score_.begin();
+  //     itt != cache_sorted_score_.end();
+  //     ++itt) {
+  //   itt->second = 1. / itt->second;
+  // }
+  // sort(cache_sorted_score_.begin(), cache_sorted_score_.end(), IntCmp());
+  for (map<string, double>::iterator itt = score_map_.begin();
+      itt != score_map_.end();
+      ++itt) {
+    itt->second = 1. / itt->second;
+  }
+
+  // cache_dirty_ = false;
+
   return 0;
 }
 

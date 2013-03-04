@@ -32,7 +32,7 @@ int BeliefPropagationContagionEngine::Run() {
     for (Album::const_iterator it = album.begin();
         it != album.end();
         ++it) {
-      if (!it->GetAssignedId().compare("-")) {
+      if (it->GetAssignedId().compare("God")) {
         visit_queue_1_.push_back(*vi);
         break;
       }

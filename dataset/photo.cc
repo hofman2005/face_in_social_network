@@ -29,8 +29,8 @@ cv::Mat Photo::GetImage(const std::string &prefix) {
 }
 
 cv::Mat Photo::GetImage() {
-  return cv::imread(image_prefix_+image_file_, 0);
-  // return GetFeature();
+  // return cv::imread(image_prefix_+image_file_, 0);
+  return GetFeature();
 }
 
 cv::Mat Photo::GetFeature() {

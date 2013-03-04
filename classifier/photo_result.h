@@ -32,7 +32,7 @@ class PhotoResult {
   int AddRecord(const std::string& id, const double score, MergeType merge_type=TAKE_MIN);
   int AddRecord(const std::string& id, const double score, const std::string& source);
   double GetRecord(const std::string& id) const;
-  inline int GetNumRecord() const {return record_.size();};
+  int GetNumRecord();
   
   const std::string GetSortedDecision(const int rank,
                                       double* score = NULL,
@@ -47,6 +47,7 @@ class PhotoResult {
   int sort_score();
   int Vote();
   int Vote_Min();
+  int Vote_kNN();
   void Prune();
 
   mutable std::map<std::string, double> score_map_;
@@ -58,6 +59,18 @@ class PhotoResult {
       return lhs.second < rhs.second;
     };
   };
+  struct IntCmpGreater {
+    bool operator()(const std::pair<std::string, double>& lhs, 
+                    const std::pair<std::string, double>& rhs) {
+      return lhs.second > rhs.second;
+    };
+  };
+  struct FullRecordCmp {
+    bool operator()(const FullRecord& lhs, const FullRecord& rhs) {
+      return lhs.score < rhs.score;
+    };
+  };
+
   std::vector<FullRecord> record_;
 };
 

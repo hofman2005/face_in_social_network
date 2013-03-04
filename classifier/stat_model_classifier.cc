@@ -118,7 +118,7 @@ bool StatModelClassifier::Identify(const cv::Mat& image, PhotoResult* res) {
         ++it) {
       const std::string& id = id_table_reverse_.find(it->first)->second;
       double score = it->second;
-      res->AddRecord(id, score);
+      res->AddRecord(id, score, ".");
     }
   }
   else if (CvKNearest *p = dynamic_cast<CvKNearest*>(kernel_)) {
@@ -131,7 +131,7 @@ bool StatModelClassifier::Identify(const cv::Mat& image, PhotoResult* res) {
     for (int i=0; i<K; ++i) {
       const std::string& id = id_table_reverse_.find(neighborResponse.at<float>(i))->second;
       double score = dist.at<float>(i);
-      res->AddRecord(id, score);
+      res->AddRecord(id, score, ".");
     }
   }
 

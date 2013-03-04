@@ -12,6 +12,7 @@
 
 namespace FaceRecognition {
 int PhotoResult::AddRecord(const std::string& id, const double score, MergeType merge_type) {
+  /*
   // Merge
   if (score_map_.find(id) != score_map_.end()) {
     if (merge_type == TAKE_MAX) {
@@ -53,23 +54,31 @@ int PhotoResult::AddRecord(const std::string& id, const double score, MergeType 
   // score_map_[id] += score;
   // cache_dirty_ = true;
   record_.push_back(FullRecord(id, score, ""));
+  */
+  AddRecord(id, score, ".");
   
   return 0;
 }
 
-double PhotoResult::GetRecord(const std::string& id) const {
-  std::map<std::string, double>::const_iterator it = score_map_.find(id);
-  if (it == score_map_.end()) {
-    throw PhotoResultError();
-  } else {
-    return it->second;
-  }
+int PhotoResult::AddRecord(const std::string& id, const double score, const std::string& source) {
+  record_.push_back(FullRecord(id, score, source));
+  cache_dirty_ = true;
+  return 0;
 }
+
+// double PhotoResult::GetRecord(const std::string& id) const {
+//   std::map<std::string, double>::const_iterator it = score_map_.find(id);
+//   if (it == score_map_.end()) {
+//     throw PhotoResultError();
+//   } else {
+//     return it->second;
+//   }
+// }
 
 // Rank begin with 0.
 const std::string PhotoResult::GetSortedDecision(const int rank,
                                                   double* score,
-                                                  std::string* id) {
+                                                  std::string* id) const {
   if (cache_dirty_) sort_score();
   if (cache_sorted_score_.size() == 0) {
     if(score) *score = 0;
@@ -82,8 +91,19 @@ const std::string PhotoResult::GetSortedDecision(const int rank,
   }
 }
 
-int PhotoResult::sort_score() {
+int PhotoResult::sort_score() const {
   using namespace std;
+  score_map_.clear();
+  for (vector<FullRecord>::const_iterator it = record_.begin();
+      it != record_.end(); 
+      ++it) {
+    if (score_map_.count(it->id) == 0) {
+      score_map_[it->id] = it->score;
+    }
+    else {
+      score_map_[it->id] = min(score_map_[it->id], it->score);
+    }
+  }
   cache_sorted_score_.assign(score_map_.begin(), score_map_.end());
   std::sort(cache_sorted_score_.begin(), cache_sorted_score_.end(), IntCmp());
   cache_dirty_ = false;
@@ -101,23 +121,35 @@ std::istream& PhotoResult::ReadFromStream(std::istream& in) {
   stringbuf buf;
   in.get(buf, '\n');
   stringstream ss(buf.str());
-  string id;
+  string id, source;
   double score;
-  score_map_.clear();
-  ss >> id >> score;
+  // score_map_.clear();
+  // ss >> id >> score;
+  // record_.clear();
+  // record_.push_back(FullRecord());
+  FullRecord rec;
+  ss >> rec.id >> rec.score >> rec.source;
+
   if (ss.good()) cache_dirty_ = true;
   while (ss.good()) {
-    score_map_[id] = score;
-    ss >> id >> score;
+    // score_map_[id] = score;
+    // ss >> id >> score;
+    record_.push_back(rec);
+    ss >> rec.id >> rec.score >> rec.source;
   }
   return in;
 }
 
 std::ostream& PhotoResult::WriteToStream(std::ostream& out) const {
   using namespace std;
-  map<string, double>::const_iterator it;
-  for (it=score_map_.begin(); it!=score_map_.end(); ++it) {
-    out << it->first << " " << it->second << " ";
+  // map<string, double>::const_iterator it;
+  // for (it=score_map_.begin(); it!=score_map_.end(); ++it) {
+  //   out << it->first << " " << it->second << " ";
+  // }
+  for (vector<FullRecord>::const_iterator it = record_.begin();
+      it != record_.end();
+      ++it) {
+    out << it->id << " " << it->score << " " << it->source << " ";
   }
   out << endl;
 

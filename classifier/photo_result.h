@@ -25,17 +25,18 @@ class PhotoResult {
       FullRecord(const std::string& _id, const double _score, const std::string& _source)
         : score(_score), id(_id), source(_source) {};
     };
+
  public:
   enum MergeType {TAKE_MAX, TAKE_MEAN, TAKE_MIN};
   PhotoResult() : cache_dirty_(false) {};
   int AddRecord(const std::string& id, const double score, MergeType merge_type=TAKE_MIN);
   int AddRecord(const std::string& id, const double score, const std::string& source);
   double GetRecord(const std::string& id) const;
-  inline int GetNumRecord() const {return score_map_.size();};
+  inline int GetNumRecord() const {return record_.size();};
   
   const std::string GetSortedDecision(const int rank,
                                       double* score = NULL,
-                                      std::string* id = NULL); // Score are sorted in ascending order.
+                                      std::string* id = NULL) const; // Score are sorted in ascending order.
   
   std::istream& ReadFromStream(std::istream& in);
   std::ostream& WriteToStream(std::ostream& out) const;
@@ -43,11 +44,11 @@ class PhotoResult {
   class PhotoResultError {};
  
  private:
-  int sort_score();
-  std::map<std::string, double> score_map_;
-  std::map<std::string, int> score_count_;
-  std::vector< std::pair<std::string, double> > cache_sorted_score_;
-  bool cache_dirty_;
+  int sort_score() const;
+  mutable std::map<std::string, double> score_map_;
+  mutable std::map<std::string, int> score_count_;
+  mutable std::vector< std::pair<std::string, double> > cache_sorted_score_;
+  mutable bool cache_dirty_;
   struct IntCmp {
     bool operator()(const std::pair<std::string, double>& lhs, 
                     const std::pair<std::string, double>& rhs) {

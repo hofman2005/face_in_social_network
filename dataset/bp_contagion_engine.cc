@@ -237,7 +237,7 @@ int BeliefPropagationContagionEngine::PropagateOnSingleVertex
   // for (Album::iterator it = album.begin(); it != album.end(); ++it) {
   int it;
   cv::Mat image;
-//#pragma omp parallel for private(it, id, assigned_by, image)
+#pragma omp parallel for private(it, id, assigned_by, image)
   for (it = 0; it < album.size(); ++it) {
     // ++it_count;
     // std::cout << it_count << " of " << album.size() << "\r";

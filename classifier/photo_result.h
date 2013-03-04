@@ -36,7 +36,7 @@ class PhotoResult {
   
   const std::string GetSortedDecision(const int rank,
                                       double* score = NULL,
-                                      std::string* id = NULL) const; // Score are sorted in ascending order.
+                                      std::string* id = NULL); // Score are sorted in ascending order.
   
   std::istream& ReadFromStream(std::istream& in);
   std::ostream& WriteToStream(std::ostream& out) const;
@@ -44,9 +44,12 @@ class PhotoResult {
   class PhotoResultError {};
  
  private:
-  int sort_score() const;
+  int sort_score();
+  int Vote();
+  int Vote_Min();
+  void Prune();
+
   mutable std::map<std::string, double> score_map_;
-  mutable std::map<std::string, int> score_count_;
   mutable std::vector< std::pair<std::string, double> > cache_sorted_score_;
   mutable bool cache_dirty_;
   struct IntCmp {

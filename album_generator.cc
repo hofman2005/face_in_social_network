@@ -2,8 +2,6 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 13 Dec 2012 02:40:37 PM
-#
 # Filename: album_generator.cc
 #
 =========================================*/
@@ -30,6 +28,7 @@ int main(int argc, char ** argv) {
   int dist_thres = 4e5;
   double label_percent = 0.3;
   double wrong_label_percent = 0.0;
+  double remove_edge_percent = 0.0;
 
   po::options_description options("command line options");
   options.add_options() 
@@ -48,6 +47,8 @@ int main(int argc, char ** argv) {
      "The percentage of initial labeled images, default 0.3.")
     ("wrong-label-percent,w", boost::program_options::value<double>(&wrong_label_percent),
      "The percentage of initial labeled images, default 0.0.")
+    ("remove-edge-percent,e", boost::program_options::value<double>(&remove_edge_percent),
+     "The percentage of removed edges, default 0.0.")
   ;
 
   po::variables_map vmap;
@@ -118,6 +119,10 @@ int main(int argc, char ** argv) {
   // Change labels
   if (wrong_label_percent > 0.0)
     generator.LabelGenerator_WrongLabels(&album_map, wrong_label_percent);
+
+  // Randomly remove labels
+  if (remove_edge_percent > 0.0)
+    generator.RemoveEdges(&graph, remove_edge_percent);
 
   // Save graph
   std::string output_dot_file = output_prefix + ".dot";

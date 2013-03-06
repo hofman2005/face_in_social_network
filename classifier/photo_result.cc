@@ -18,6 +18,13 @@ int PhotoResult::AddRecord(const string& id, const double score, MergeType merge
   return 0;
 }
 
+void PhotoResult::ClearRecord() {
+  cache_dirty_ = true;
+  score_map_.clear();
+  cache_sorted_score_.clear();
+  record_.clear();
+}
+
 int PhotoResult::AddRecord(const string& id, const double score, const string& source) {
   record_.push_back(FullRecord(id, score, source));
   cache_dirty_ = true;
@@ -176,5 +183,10 @@ ostream& PhotoResult::WriteToStream(ostream& out) const {
   // out << "% DEBUG_END" << endl;
   
   return out;
+}
+
+double PhotoResultDistance(const PhotoResult& res1,
+                           const PhotoResult& res2) {
+  return 0;
 }
 }

@@ -37,7 +37,7 @@ int StatModelClassifier::Reset() {
   return 0;
 }
 
-int StatModelClassifier::Train(SocialNetwork::Album& training_album) {
+int StatModelClassifier::Train(const SocialNetwork::Album& training_album) {
   PrepareTrainingData(training_album);
 
   if (id_table_.size() < 2) {
@@ -63,7 +63,7 @@ int StatModelClassifier::Train() {
   return 0;
 }
 
-int StatModelClassifier::PrepareTrainingData(SocialNetwork::Album& training_album) {
+int StatModelClassifier::PrepareTrainingData(const SocialNetwork::Album& training_album) {
   int num = training_album.size();
   
   feature_.create(0, 0, CV_32FC1), labels_.create(0,1,CV_32SC1);

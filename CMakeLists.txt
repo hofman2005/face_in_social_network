@@ -1,7 +1,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 04 Dec 2012 04:58:04 PM
+# Last-modified: 06 Mar 2013 09:41:31 AM
 #
 # Filename: CMakeLists.txt
 #
@@ -37,7 +37,8 @@ FILE(GLOB SRC_LIST "classifier/*.cc"
   "dataset/*.cc" 
 #  "fr_engine/*.cc"
   "graph/*.cc" 
-  "random_generator/*.cc")
+  "random_generator/*.cc"
+  "edge_discover/*.cc")
   #"*.cc")
 
 # Outputs
@@ -83,3 +84,6 @@ TARGET_LINK_LIBRARIES(baseline SocialNetwork ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 ADD_EXECUTABLE(baseline_all baseline_all.cc)
 TARGET_LINK_LIBRARIES(baseline_all SocialNetwork ${OpenCV_LIBS} ${Boost_LIBRARIES})
+
+ADD_EXECUTABLE(edge_discover edge_discover_main.cc)
+TARGET_LINK_LIBRARIES(edge_discover SocialNetwork ${OpenCV_LIBS} ${Boost_LIBRARIES})

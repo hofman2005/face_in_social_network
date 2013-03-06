@@ -28,12 +28,12 @@ cv::Mat Photo::GetImage(const std::string &prefix) {
     // return GetFeature(prefix);
 }
 
-cv::Mat Photo::GetImage() {
+cv::Mat Photo::GetImage() const {
   // return cv::imread(image_prefix_+image_file_, 0);
   return GetFeature();
 }
 
-cv::Mat Photo::GetFeature() {
+cv::Mat Photo::GetFeature() const {
   std::string filename = image_prefix_+image_file_+".fea";
   std::ifstream file(filename.c_str()); 
   file.seekg(0, std::ios::end);

@@ -46,14 +46,17 @@ class Photo {
   inline const std::string& GetAssignedId() const {return assigned_id_;};
   inline const std::string& GetAssignedBy() const {return assigned_by_;};
   inline FaceRecognition::PhotoResult& GetPhotoRes() {return res_;}; 
+  inline const FaceRecognition::PhotoResult& GetPhotoRes() const {
+    return res_;
+  };
 
   //void SetTrueId(const std::string &id);
   void SetAssignedId(const std::string &id, const std::string &by);
   const std::string DecideId();
 
   cv::Mat GetImage(const std::string &prefix);
-  cv::Mat GetImage();
-  cv::Mat GetFeature();
+  cv::Mat GetImage() const;
+  cv::Mat GetFeature() const;
   // void ReleaseImage();
   
   int WriteToStream(std::ofstream& out) const;

@@ -22,9 +22,12 @@ class Album {
     const_iterator begin() const {return album_.begin();};
     const_iterator end() const {return album_.end();};
 
-    size_t size() {return album_.size();};
+    size_t size() const {return album_.size();};
 
     Photo& operator[](int i) {return album_[i];};
+    const Photo& operator[] (int i) const {
+      return album_[i];
+    };
 
     void push_back(const Photo& photo) {album_.push_back(photo);};
 

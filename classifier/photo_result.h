@@ -33,6 +33,7 @@ class PhotoResult {
   int AddRecord(const std::string& id, const double score, const std::string& source);
   double GetRecord(const std::string& id) const;
   int GetNumRecord();
+  void ClearRecord();
   
   const std::string GetSortedDecision(const int rank,
                                       double* score = NULL,
@@ -81,6 +82,8 @@ inline std::istream& operator>> (std::istream& in, PhotoResult& photo_result) {
 inline std::ostream& operator<< (std::ostream& out, const PhotoResult& photo_result) {
   return photo_result.WriteToStream(out);
 };
+
+double PhotoResultDistance(const PhotoResult& res1, const PhotoResult& res2);
  
 }
 

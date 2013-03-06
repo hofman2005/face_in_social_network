@@ -121,8 +121,11 @@ int main(int argc, char ** argv) {
     generator.LabelGenerator_WrongLabels(&album_map, wrong_label_percent);
 
   // Randomly remove labels
-  if (remove_edge_percent > 0.0)
+  if (remove_edge_percent > 0.0) {
+    std::string output_dot_file = output_prefix + "_ori.dot";
+    sn::WriteGraphToFile(graph, output_dot_file);
     generator.RemoveEdges(&graph, remove_edge_percent);
+  }
 
   // Save graph
   std::string output_dot_file = output_prefix + ".dot";

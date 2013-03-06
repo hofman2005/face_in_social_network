@@ -35,7 +35,7 @@ class BaseClassifier {
 
   virtual int Train(const ImageList& image_list) 
     {std::cout << "Dummy Training." << std::endl;return 0;};
-  virtual int Train(SocialNetwork::Album& training_album) {};
+  virtual int Train(const SocialNetwork::Album& training_album) {};
 
   virtual int TrainWithUpdatedLabels(const ImageList& image_list) 
     {std::cout << "Dummy Training with updated labels." << std::endl; return 0;};

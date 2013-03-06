@@ -21,13 +21,13 @@ class StatModelClassifier : public BaseClassifier {
     virtual ~StatModelClassifier();
 
     virtual int Reset();
-    virtual int Train(SocialNetwork::Album& training_album);
+    virtual int Train(const SocialNetwork::Album& training_album);
     virtual bool Identify(const cv::Mat& image, PhotoResult* res);
 
     class BadClassifierType {};
 
   private:
-    int PrepareTrainingData(SocialNetwork::Album& training_album);
+    int PrepareTrainingData(const SocialNetwork::Album& training_album);
     int Train();
     bool Identify();
 

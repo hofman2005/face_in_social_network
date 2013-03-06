@@ -45,6 +45,7 @@ typedef boost::graph_traits<_SocialGraph>::vertex_descriptor Vertex;
 typedef boost::graph_traits<_SocialGraph>::vertex_iterator VertexIterator;
 typedef boost::graph_traits<_SocialGraph>::adjacency_iterator AdjacencyIterator;
 typedef boost::graph_traits<_SocialGraph>::edge_descriptor Edge;
+typedef boost::graph_traits<_SocialGraph>::edge_iterator EdgeIterator;
 
 // TODO
 // This is not a safe practice. Needs to refactor the code.

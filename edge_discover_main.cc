@@ -76,4 +76,12 @@ int main(int argc, char **argv) {
   delete classifier;
 
   // Save Result
+  ofstream out_file(output.c_str());
+  for (map<pair<string,string>,double>::const_iterator it = result.begin();
+      it != result.end();
+      ++it) {
+    out_file << it->first.first << " "
+      << it->first.second << " "
+      << it->second << endl;
+  }
 }

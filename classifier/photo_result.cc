@@ -9,6 +9,8 @@
 #include <algorithm>
 #include <sstream>
 #include <fstream>
+#include <map>
+#include <cmath>
 
 namespace FaceRecognition {
 using namespace std;
@@ -31,7 +33,7 @@ int PhotoResult::AddRecord(const string& id, const double score, const string& s
   return 0;
 }
 
-int PhotoResult::GetNumRecord() {
+int PhotoResult::GetNumRecord() const {
   if (cache_dirty_ == true) sort_score();
   return score_map_.size();
 }
@@ -47,8 +49,8 @@ double PhotoResult::GetRecord(const string& id) const {
 
 // Rank begin with 0.
 const string PhotoResult::GetSortedDecision(const int rank,
-                                                  double* score,
-                                                  string* id) {
+                                            double* score,
+                                            string* id) const {
   if (cache_dirty_) sort_score();
   if (cache_sorted_score_.size() == 0) {
     if(score) *score = 0;
@@ -61,7 +63,7 @@ const string PhotoResult::GetSortedDecision(const int rank,
   }
 }
 
-int PhotoResult::sort_score() {
+int PhotoResult::sort_score() const {
   score_map_.clear();
   Vote();
 
@@ -88,13 +90,13 @@ void PhotoResult::Prune() {
   }
 }
 
-int PhotoResult::Vote() {
+int PhotoResult::Vote() const {
   // Vote_Min();
   Vote_kNN();
   return 0;
 }
 
-int PhotoResult::Vote_Min() {
+int PhotoResult::Vote_Min() const {
   for (vector<FullRecord>::const_iterator it = record_.begin();
       it != record_.end(); 
       ++it) {
@@ -109,13 +111,14 @@ int PhotoResult::Vote_Min() {
 }
 
 // Not compatible with Prune()
-int PhotoResult::Vote_kNN() {
-  sort(record_.begin(), record_.end(), FullRecordCmp()); 
+int PhotoResult::Vote_kNN() const {
+  vector<FullRecord> record(record_);
+  sort(record.begin(), record.end(), FullRecordCmp()); 
   // map<string, double> knn_score_map_;
-  vector<FullRecord>::const_iterator it = record_.begin();
+  vector<FullRecord>::const_iterator it = record.begin();
   int count = 0;
   const int MAX_KNN = 5;
-  while (it != record_.end() && count < MAX_KNN) {
+  while (it != record.end() && count < MAX_KNN) {
     score_map_[it->id] ++;
     ++it;
     ++count;
@@ -127,10 +130,13 @@ int PhotoResult::Vote_kNN() {
   //   itt->second = 1. / itt->second;
   // }
   // sort(cache_sorted_score_.begin(), cache_sorted_score_.end(), IntCmp());
-  for (map<string, double>::iterator itt = score_map_.begin();
-      itt != score_map_.end();
-      ++itt) {
-    itt->second = 1. / itt->second;
+  
+  if (score_is_distance_) {
+    for (map<string, double>::iterator itt = score_map_.begin();
+        itt != score_map_.end();
+        ++itt) {
+      itt->second = 1. / itt->second;
+    }
   }
 
   // cache_dirty_ = false;
@@ -187,6 +193,47 @@ ostream& PhotoResult::WriteToStream(ostream& out) const {
 
 double PhotoResultDistance(const PhotoResult& res1,
                            const PhotoResult& res2) {
-  return 0;
+  map<string, double> score_map_1, score_map_2;
+  double total_score_1 = 0, total_score_2 = 0;
+  string id;
+  double score;
+  for (int i=0; i<res1.GetNumRecord(); ++i) {
+    res1.GetSortedDecision(i, &score, &id);
+    if (res1.ScoreIsDistance()) 
+      score = 1./score;
+    score_map_1[id] = score;
+    total_score_1 += score;
+    if (score_map_2.count(id) == 0)
+      score_map_2[id] = 0;
+  }
+  for (int i=0; i<res2.GetNumRecord(); ++i) {
+    res2.GetSortedDecision(i, &score, &id);
+    if (res2.ScoreIsDistance())
+      score = 1./score;
+    score_map_2[id] = score;
+    total_score_2 += score;
+    if (score_map_1.count(id) == 0) 
+      score_map_1[id] = 0;
+  }
+  // Laplacian smooth
+  const double alpha = 0.1;
+  int size = score_map_1.size();
+  for (map<string, double>::iterator it = score_map_1.begin();
+      it != score_map_1.end();
+      ++it) {
+    it->second = (it->second + alpha) / (it->second + size * alpha);
+  }
+  for (map<string, double>::iterator it = score_map_2.begin();
+      it != score_map_2.end();
+      ++it) {
+    it->second = (it->second + alpha) / (it->second + size * alpha);
+  }
+  double dist = 0.0;
+  for (map<string, double>::iterator it = score_map_1.begin();
+      it != score_map_1.end();
+      ++it) {
+    dist += fabs(it->second - score_map_2[it->first]);
+  }
+  return dist;
 }
 }

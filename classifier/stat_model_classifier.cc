@@ -42,7 +42,7 @@ int StatModelClassifier::Train(const SocialNetwork::Album& training_album) {
 
   if (id_table_.size() < 2) {
     std::cout << "Only one class is labeled." << std::endl;
-    return 0;
+    return -1;
   }
 
   Train();

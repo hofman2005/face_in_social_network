@@ -28,46 +28,49 @@ class PhotoResult {
 
  public:
   enum MergeType {TAKE_MAX, TAKE_MEAN, TAKE_MIN};
-  PhotoResult() : cache_dirty_(false) {};
+  PhotoResult() : score_is_distance_(true), cache_dirty_(false) {};
+  void SetScoreIsDistance(bool flag) {score_is_distance_ = flag;};
+  bool ScoreIsDistance() const {return score_is_distance_;};
   int AddRecord(const std::string& id, const double score, MergeType merge_type=TAKE_MIN);
   int AddRecord(const std::string& id, const double score, const std::string& source);
   double GetRecord(const std::string& id) const;
-  int GetNumRecord();
+  int GetNumRecord() const;
   void ClearRecord();
   
   const std::string GetSortedDecision(const int rank,
                                       double* score = NULL,
-                                      std::string* id = NULL); // Score are sorted in ascending order.
-  
+                                      std::string* id = NULL) const; // Score are sorted in ascending order.
+
   std::istream& ReadFromStream(std::istream& in);
   std::ostream& WriteToStream(std::ostream& out) const;
 
   class PhotoResultError {};
  
  private:
-  int sort_score();
-  int Vote();
-  int Vote_Min();
-  int Vote_kNN();
+  int sort_score() const;
+  int Vote() const;
+  int Vote_Min() const;
+  int Vote_kNN() const;
   void Prune();
 
+  bool score_is_distance_;
   mutable std::map<std::string, double> score_map_;
   mutable std::vector< std::pair<std::string, double> > cache_sorted_score_;
   mutable bool cache_dirty_;
   struct IntCmp {
     bool operator()(const std::pair<std::string, double>& lhs, 
-                    const std::pair<std::string, double>& rhs) {
+                    const std::pair<std::string, double>& rhs) const {
       return lhs.second < rhs.second;
     };
   };
   struct IntCmpGreater {
     bool operator()(const std::pair<std::string, double>& lhs, 
-                    const std::pair<std::string, double>& rhs) {
+                    const std::pair<std::string, double>& rhs) const {
       return lhs.second > rhs.second;
     };
   };
   struct FullRecordCmp {
-    bool operator()(const FullRecord& lhs, const FullRecord& rhs) {
+    bool operator()(const FullRecord& lhs, const FullRecord& rhs) const {
       return lhs.score < rhs.score;
     };
   };

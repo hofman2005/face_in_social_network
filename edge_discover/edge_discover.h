@@ -23,7 +23,7 @@ class EdgeDiscover {
     
     void Run(const SocialGraph& graph, 
              const AlbumMap& album_map, 
-             std::map<std::pair<std::string, std::string>, double> result);
+             std::map<std::pair<std::string, std::string>, double>& result);
 
   private:
     double CalcDistance(const Album& album_1, const Album& album_2);

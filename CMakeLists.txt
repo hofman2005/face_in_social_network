@@ -1,7 +1,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 06 Mar 2013 09:41:31 AM
+# Last-modified: 07 Mar 2013 05:56:06 PM
 #
 # Filename: CMakeLists.txt
 #
@@ -87,3 +87,6 @@ TARGET_LINK_LIBRARIES(baseline_all SocialNetwork ${OpenCV_LIBS} ${Boost_LIBRARIE
 
 ADD_EXECUTABLE(edge_discover edge_discover_main.cc)
 TARGET_LINK_LIBRARIES(edge_discover SocialNetwork ${OpenCV_LIBS} ${Boost_LIBRARIES})
+
+ADD_EXECUTABLE(analysis_edge_roc analysis_edge_roc.cc)
+TARGET_LINK_LIBRARIES(analysis_edge_roc SocialNetwork ${OpenCV_LIBS} ${Boost_LIBRARIES})

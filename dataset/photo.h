@@ -52,7 +52,7 @@ class Photo {
 
   //void SetTrueId(const std::string &id);
   void SetAssignedId(const std::string &id, const std::string &by);
-  const std::string DecideId();
+  const std::string DecideId() const;
 
   cv::Mat GetImage(const std::string &prefix);
   cv::Mat GetImage() const;

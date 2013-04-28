@@ -194,7 +194,7 @@ ostream& PhotoResult::WriteToStream(ostream& out) const {
 double PhotoResultDistance(const PhotoResult& res1,
                            const PhotoResult& res2) {
   map<string, double> score_map_1, score_map_2;
-  double total_score_1 = 0, total_score_2 = 0;
+  // double total_score_1 = 0, total_score_2 = 0;
   string id;
   double score;
   for (int i=0; i<res1.GetNumRecord(); ++i) {
@@ -202,7 +202,7 @@ double PhotoResultDistance(const PhotoResult& res1,
     if (res1.ScoreIsDistance()) 
       score = 1./score;
     score_map_1[id] = score;
-    total_score_1 += score;
+    // total_score_1 += score;
     if (score_map_2.count(id) == 0)
       score_map_2[id] = 0;
   }
@@ -211,12 +211,35 @@ double PhotoResultDistance(const PhotoResult& res1,
     if (res2.ScoreIsDistance())
       score = 1./score;
     score_map_2[id] = score;
-    total_score_2 += score;
+    // total_score_2 += score;
     if (score_map_1.count(id) == 0) 
       score_map_1[id] = 0;
   }
+  // Normalize
+  double total_score = 0.0;
+  for (map<string, double>::iterator it = score_map_1.begin();
+      it != score_map_1.end();
+      ++it) {
+    total_score += it->second;
+  }
+  for (map<string, double>::iterator it = score_map_1.begin();
+      it != score_map_1.end();
+      ++it) {
+    it->second /= total_score;
+  }
+  total_score = 0.0;
+  for (map<string, double>::iterator it = score_map_2.begin();
+      it != score_map_2.end();
+      ++it) {
+    total_score += it->second;
+  }
+  for (map<string, double>::iterator it = score_map_2.begin();
+      it != score_map_2.end();
+      ++it) {
+    it->second /= total_score;
+  }
   // Laplacian smooth
-  const double alpha = 0.1;
+  const double alpha = 0.01;
   int size = score_map_1.size();
   for (map<string, double>::iterator it = score_map_1.begin();
       it != score_map_1.end();

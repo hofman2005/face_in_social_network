@@ -53,7 +53,9 @@ double EdgeDiscover::CalcDistance(const Album& album_1, const Album& album_2) {
   cv::Mat image;
   for (int i=0; i<album_2.size(); ++i) {
     assigned_by = album[i].GetAssignedBy();  
-    if ( ! (assigned_by == "Amb" || assigned_by == "-") ) 
+    //if ( ! (assigned_by == "Amb" || assigned_by == "-") ) 
+    //  continue;
+    if (assigned_by == "God") 
       continue;
     image = album[i].GetImage();
     FaceRecognition::PhotoResult& res = album[i].GetPhotoRes();

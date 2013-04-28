@@ -70,7 +70,7 @@ int Photo::WriteToStream(std::ofstream& out) const {
   return 0;
 }
 
-const std::string Photo::DecideId() {
+const std::string Photo::DecideId() const {
   return res_.GetSortedDecision(0);
 }
 }

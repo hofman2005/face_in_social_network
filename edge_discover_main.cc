@@ -11,6 +11,7 @@
 #include "dataset/social_graph.h"
 #include "edge_discover/edge_discover.h"
 #include "classifier/stat_model_classifier.h"
+#include "edge_discover/edge_discover_baseline.h"
 
 int main(int argc, char **argv) {
   namespace sn = SocialNetwork;
@@ -65,6 +66,7 @@ int main(int argc, char **argv) {
   sn::Photo::SetPrefix(image_prefix);
 
   // Run
+  // sn::EdgeDiscoverBaseline * discover_engine = new sn::EdgeDiscoverBaseline();
   sn::EdgeDiscover * discover_engine = new sn::EdgeDiscover();
   fr::BaseClassifier * classifier = new fr::StatModelClassifier(fr::StatModelClassifier::KNearest);
   discover_engine->SetClassifier(classifier);

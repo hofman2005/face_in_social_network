@@ -71,6 +71,8 @@ double EdgeDiscover::KLDistance(const Album& album_1, const Album& album_2) {
   int count = 0;
   // assert(album_1.size() == album_2.size());
   for (int i=0; i<min(album_1.size(), album_2.size()); ++i) {
+    // if (album_2[i].GetAssignedBy() == "God" || 
+    //     album_1[i].GetFilename() != album_2[i].GetFilename()) {
     if (album_1[i].GetFilename() != album_2[i].GetFilename()) {
       continue;
     }

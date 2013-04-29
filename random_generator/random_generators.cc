@@ -2,7 +2,7 @@
 #
 # Author: Tao Wu - taowu@umiacs.umd.edu
 #
-# Last-modified: 14 Nov 2012 05:00:40 AM
+# Last-modified: 28 Apr 2013 03:49:30 PM
 #
 # Filename: random_generators.cc
 #
@@ -123,7 +123,7 @@ void RandomGenerators::AlbumGenerator(const SocialGraph &graph,
           int prob = rand() % 1000;
           if (dist == 0 && prob < 300 ||
               dist == 1 && prob < 300 ||
-              dist == 2 && prob < 0) {
+              dist == 2 && prob < 150) {
             current_album.push_back(*photo_it);
           }
         }
